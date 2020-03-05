@@ -1,0 +1,73 @@
+@font-face
+  font-family 'h'
+  src url('../assets/fonts/h/ubuntu-light.woff2') format('woff2'), url('../assets/fonts/h/ubuntu-light.woff') format('woff')
+  font-weight normal
+  font-style normal
+
+// reset
+*
+  box-sizing: border-box
+  font-family h
+
+body, html, p
+  padding 0
+  margin 0
+  font-family 'h'
+  overflow visible
+  scrollbar-color #363636 #fee5c9
+  scrollbar-width thin
+
+body
+  .questions
+    .el-submenu__title
+      white-space normal
+      height auto
+      line-height 25px
+      padding 20px
+
+h1,h2,h3,h4,h5
+  text-align center
+
+h2
+    font 30px 'h'
+    text-transform uppercase
+    text-align center
+
+::-webkit-scrollbar
+  width 8px
+ 
+::-webkit-scrollbar-thumb
+  background #363636
+  border 1px solid #fee5c9
+
+::-webkit-scrollbar-track
+  background-color #fff
+  background #fee5c9
+
+.famous-wrap
+  min-height calc(100vh - 60px)
+  padding-top 170px
+  @media (max-width 790px)
+    padding-top 80px
+
+.mr05rem
+  margin-right 0.5rem
+
+.gray
+  background #373737
+  position relative
+  z-index 1
+  display inline-block
+  padding 10px
+
+.main-layout
+  min-height 100vh
+
+.page
+  &-enter-active,
+  &-leave-active
+    transition opacity .3s
+
+  &-enter,
+  &-leave-to
+    opacity 0

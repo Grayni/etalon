@@ -1,4 +1,3 @@
-
 module.exports = {
   mode: 'universal',
 
@@ -17,7 +16,9 @@ module.exports = {
   loading: { color: '#fff' },
 
   css: [
-    'element-ui/lib/theme-chalk/index.css'
+    // 'element-ui/lib/theme-chalk/index.css',
+    '@/theme/index.styl',
+    '@/theme/index.css'
   ],
   
   plugins: [
@@ -29,6 +30,13 @@ module.exports = {
   
   modules: [
     '@nuxtjs/axios',
+    ['vue-yandex-maps/nuxt', {
+      apiKey: 'b226479b-b218-4f68-954f-8b4c1cce1446',
+      lang: 'ru_RU',
+      coordorder: 'latlong',
+      version: '2.1'
+    }],
+    'nuxt-user-agent'
   ],
   
   axios: {
