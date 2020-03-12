@@ -13,9 +13,16 @@
 <script>
 import dataQuestions from '@/json/dataQuestions.json'
 export default {
+  layout: 'default',
+  head() {
+    return {
+      title: `${this.question} | ${process.env.appName}`
+    }
+  },
   data() {
     return {
-      dataQuestions
+      dataQuestions,
+      question: 'test-question'
     }
   },
 }

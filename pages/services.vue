@@ -20,7 +20,7 @@ import {widthWatch} from '~/plugins/mixins'
 
 export default {
   head: {
-    title: 'Услуги'
+    title: `Услуги | ${process.env.appName}`
   },
   mixins: [widthWatch],
   components: {

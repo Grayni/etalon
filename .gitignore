@@ -6,7 +6,6 @@
 npm-debug.log*
 yarn-debug.log*
 yarn-error.log*
-
 # Runtime data
 pids
 *.pid
@@ -88,3 +87,6 @@ sw.*
 
 # Vim swap files
 *.swp
+
+# Keys-mongodb
+server/keys/keys.dev.js

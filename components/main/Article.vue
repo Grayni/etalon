@@ -1,17 +1,16 @@
 <template lang="pug">
-  el-card(
+  el-card.article(
     shadow="hover"
     :body-style="{padding: 0}"
-    class="article"
   )
     header.article-header(slot="header")
-      h3.article-title(@click="openArticle") Article title
+      h3.article-title(@click="openArticle") {{article.title}}
       small
         i.el-icon-time
-        |  {{ new Date().toLocaleString() }}
+        |  {{ article.date | date('date') }}
     .article-body
       .article-img-wrap
-        img.article-img(src="/articles/office.jpg" alt="НДС")
+        img.article-img(:src="`/articles${article.imageUrl}`")
         span.article-shadow
     footer.article-footer
       el-button.read(
@@ -21,15 +20,21 @@
         span Читать
         i.el-icon-arrow-right
       span
-        i.el-icon-chat-round
-        | 12
+        i.el-icon-view
+        |  {{article.views}}
 </template>
 
 <script>
 export default {
+  props: {
+    article: {
+      type: Object,
+      required: true
+    }
+  },
   methods: {
     openArticle() {
-      const id = 'test-id'
+      const id = this.article._id
       this.$router.push(`/article/${id}`)
     }
   }
@@ -55,6 +60,8 @@ export default {
     height auto
     &-wrap
       position relative
+      img
+        max-height 30vh
   &-shadow
     width 100%
     height calc(100% - 3px)

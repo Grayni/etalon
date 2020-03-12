@@ -22,7 +22,7 @@ import AppNeed from '@/components/main/pages_sections/home/HomeNeed'
 import AppContactsFormSend from '@/components/main/pages_sections/contacts/ContactsFormSend'
 export default {
   head: {
-    title: 'Главная'
+    title: `Центр бухгалтерского обслуживания Эталон`
   },
   components: {
     AppMain,

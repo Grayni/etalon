@@ -1,6 +1,6 @@
 <template lang="pug">
   .wrap
-    el-image.icons(v-if="hide !== 'hide'" v-for="(icon, id) in icons" :src="`/${icon.name}.png`" :alt="icon.name" :key="icon.id + id")
+    el-image.icons(v-if="hide !== 'hide'" v-for="(icon, id) in icons" :src="`/${icon.name}.png`" :alt="icon.name" :key="id + _uid")
     a.number-phone(:href="`tel:+7${phone}9547013`")
       |8 (
       slot
@@ -14,16 +14,13 @@ export default {
     return {
       icons: [
         {
-          name: 'viber',
-          id: this.uid
+          name: 'viber'
         },
         {
-          name: 'whatsapp',
-          id: this.uid
+          name: 'whatsapp'
         },
         {
-          name: 'telephone',
-          id: this.uid
+          name: 'telephone'
         },
       ]
     }

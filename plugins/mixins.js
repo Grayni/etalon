@@ -108,7 +108,111 @@ export const validateForm = {
         ],
         text: [
           {required: true, message: 'Введите Ваш комментарий', trigger: 'blur'}
+        ],
+        login: [
+          {
+            required: true, message: 'Введите логин', trigger: 'blur'
+          }
+        ],
+        pass: [
+          {
+            required: true, message: 'Введите пароль', trigger: 'blur'
+          }, {
+            min: 6, message: 'Длина пароля должна быть не меньше 6 символов', trigger: 'blur'
+          }
+        ],
+        article: [
+          {
+            required: true, message: 'Поле текста должно быть заполнено', trigger: 'blur'
+          }
+        ],
+        title: [
+          {
+            required: true, message: 'Название обязательно', trigger: 'blur'
+          }
+        ],
+        price: [
+          {
+            required: true, message: 'Цена обязательна', trigger: 'blur'
+          }
+        ],
+        section: [
+          {
+            required: true, message: 'Раздел должен быть выбран', trigger: 'blur'
+          }
         ]
+      }
+    }
+  }
+}
+
+export const validateId = {
+  validate({ params }) {
+    return Boolean(params.id)
+  }
+}
+
+export const questionSections = {
+  data() {
+    return {
+      options: [
+        {
+          value: 'Option1',
+          label: 'О компании'
+        }, {
+          value: 'Option2',
+          label: 'О сотрудничестве'
+        }, {
+          value: 'Option3',
+          label: 'О ценах и порядке оплаты'
+        }, {
+          value: 'Option4',
+          label: 'Об ответственности'
+        }, {
+          value: 'Option5',
+          label: 'О тарифах'
+        }, {
+          value: 'Option6',
+          label: 'Про налоговую оптимизацию'
+        }, {
+          value: 'Option7',
+          label: 'Про кадры'
+        }, {
+          value: 'Option8',
+          label: 'О восстановлении учета'
+        }, {
+          value: 'Option9',
+          label: 'Про финансовые консультации'
+        }, {
+          value: 'Option10',
+          label: 'О регистрации организации(ип)'
+        }, {
+          value: 'Option11',
+          label: 'О "нулевке"'
+        }, {
+          value: 'Option12',
+          label: 'О задолженностях'
+        }
+      ]
+    }
+  },
+}
+
+export const setError = {
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
+  },
+  watch: {
+    error(value) {
+      if (value.response.data.message) {
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: value.response.data.message,
+          center: true
+        })
       }
     }
   }

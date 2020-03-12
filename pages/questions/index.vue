@@ -15,8 +15,9 @@
 import {transliter} from '@/plugins/mixins'
 export default {
   head: {
-    title: 'Вопросы'
+    title: `Вопросы | ${process.env.appName}`
   },
+  layout: 'default',
   mixins: [
     transliter
   ],

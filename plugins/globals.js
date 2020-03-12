@@ -1,13 +1,13 @@
 import Vue from 'vue'
+import VueMarkdown from 'vue-markdown'
 import Element from 'element-ui'
 
 import VueTheMask from 'vue-the-mask'
 import locale from 'element-ui/lib/locale/lang/ru-RU'
-import UniqueId from 'vue-unique-id'
+import DateFilter from '@/common/filters/date.filter'
 
 Vue.use(VueTheMask)
 Vue.use(Element, { locale })
-Vue.use(UniqueId)
 
 Vue.directive('scroll', {
   inserted: function (el, binding) {
@@ -19,3 +19,7 @@ Vue.directive('scroll', {
     window.addEventListener('scroll', f)
   }
 })
+
+Vue.component('vue-markdown', VueMarkdown)
+
+Vue.filter('date', DateFilter)

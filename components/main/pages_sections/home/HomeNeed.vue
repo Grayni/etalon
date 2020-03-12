@@ -4,14 +4,14 @@
       el-col(:xs="24" :lg="12")
         h2 На встречу к нам, если:
         el-collapse(v-model="activeWelcome" accordion)
-          el-collapse-item(:title="tab.title" :name="id+1" v-for="(tab, id) in tabs.welcome" :key="id+uid")
-            div(v-for="(welcome, id) in tab.content" :key="id+uid+'welcome'") {{welcome}}
+          el-collapse-item(:title="tab.title" :name="id+1" v-for="(tab, id) in tabs.welcome" :key="id+_uid")
+            div(v-for="(welcome, id) in tab.content" :key="id+_uid+'welcome'") {{welcome}}
 
       el-col(:xs="24" :lg="12")
         h2 Потому что:
         el-collapse(v-model="activeWhy" accordion)
-          el-collapse-item(:title="tab.title" :name="id+1" v-for="(tab, id) in tabs.why" :key="id+uid")
-            div(v-for="(why, id) in tab.content" :key="id+uid+'why'") {{why}}
+          el-collapse-item(:title="tab.title" :name="id+1" v-for="(tab, id) in tabs.why" :key="id+_uid")
+            div(v-for="(why, id) in tab.content" :key="id+_uid+'why'") {{why}}
 </template>
 
 <script>

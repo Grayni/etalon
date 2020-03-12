@@ -3,35 +3,36 @@
     article.article
       header.article-header
         .article-title
-          h1 Article title
+          h1 {{article.title}}
           nuxt-link(to="/articles")
             i.el-icon-back
         .article-info
           small
             i.el-icon-time
-            |  {{ new Date().toLocaleString() }}
+            |  {{ article.date | date('date') }}
           small
             i.el-icon-view
-            |  42
+            |  {{article.views}}
         .article-image
-          img(src="/articles/office.jpg" alt="НДС")
+          img(:src="`/articles${article.imageUrl}`")
       main.article-content
-        p Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore illum facilis eos vel perspiciatis repellat, in cupiditate eveniet magnam, beatae, sed ullam reiciendis facere. Nemo nisi a saepe libero impedit?
-        p Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore illum facilis eos vel perspiciatis repellat, in cupiditate eveniet magnam, beatae, sed ullam reiciendis facere. Nemo nisi a saepe libero impedit?
-        p Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore illum facilis eos vel perspiciatis repellat, in cupiditate eveniet magnam, beatae, sed ullam reiciendis facere. Nemo nisi a saepe libero impedit?
-        p Lorem ipsum dolor, sit amet consectetur adipisicing elit. Tempore illum facilis eos vel perspiciatis repellat, in cupiditate eveniet magnam, beatae, sed ullam reiciendis facere. Nemo nisi a saepe libero impedit?
+        vue-markdown {{article.text}}
       footer.article-footer
         app-logo-background
         .comments-wrap
           transition(name="hide-form")
-            app-create-comment.app-create(v-if="canAddComment" @created="createCommentHandler")
+            app-create-comment.app-create(
+              v-if="canAddComment"
+              @created="createCommentHandler"
+              :articleId="article._id"
+            )
           h3.comments-name(:class="{'head-center': !commentsExist}") Комментарии
 
-          .comments(v-if="commentsExist")
+          .comments(v-if="article.comments.length")
             app-comment(
-              v-for="comment in 4"
-              :key="uid+comment"
-              :comment="commentMeaning"
+              v-for="comment in article.comments"
+              :key="comment._id"
+              :comment="comment"
             ) 
           p.comments-none(v-else) Комментариев нет. 
 </template>
@@ -41,6 +42,11 @@ import AppComment from '@/components/main/Comment'
 import AppLogoBackground from '@/components/main/LogoBackground'
 import AppCreateComment from '@/components/main/CreateComment'
 export default {
+  head () {
+    return {
+      title: `${this.article.title} | ${process.env.appName}`
+    }
+  },
   components: {
     AppComment,
     AppLogoBackground,
@@ -49,15 +55,21 @@ export default {
   validate({params}) {
     return Boolean(params.id)
   },
+  async asyncData({store, params}) {
+    let article = await store.dispatch('articles/fetchById', params.id)
+    article = {...article, views: ++article.views}
+    await store.dispatch('articles/addView', article)
+    return {article}
+  },
   data() {
     return {
       commentsExist: true,
-      commentMeaning: '',
       canAddComment: true
     }
   },
   methods: {
-    createCommentHandler() {
+    createCommentHandler(comment) {
+      this.article.comments.unshift(comment)
       this.canAddComment = false
     }
   }

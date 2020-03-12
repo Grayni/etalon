@@ -8,7 +8,7 @@
 
     transition(name="fade")
       el-col.fly-box(:span="24" v-if="activeCard")
-        el-card.box-card(v-for="(card, id) in cardArray" :key="id+uid" v-if="card.status")
+        el-card.box-card(v-for="(card, id) in cardArray" :key="id+_uid" v-if="card.status")
           .clearfix(slot="header")
 
 

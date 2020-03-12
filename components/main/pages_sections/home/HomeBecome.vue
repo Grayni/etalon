@@ -16,7 +16,7 @@
             i.el-icon-tickets.label {{tabs.names[0]}}
           .wrap-tab-content
             .tab-content
-              .block-items(v-for="(tab, id) in tabs.begin" :key="id+uid")
+              .block-items(v-for="(tab, id) in tabs.begin" :key="id+_uid")
                 .item-wrap
                   span.item-circle {{id+1}}
                   span.item-text {{tab}}
@@ -29,7 +29,7 @@
             i.el-icon-tickets.label {{tabs.names[1]}}
           .wrap-tab-content
             .tab-content
-              .block-items(v-for="(tab, id) in tabs.process" :key="id+uid")
+              .block-items(v-for="(tab, id) in tabs.process" :key="id+_uid")
                 .item-wrap
                   span.item-circle {{id+1}}
                   span.item-text {{tab}}

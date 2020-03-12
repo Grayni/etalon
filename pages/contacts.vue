@@ -17,7 +17,7 @@ import AppContactsData from '~/components/main/pages_sections/contacts/ContactsD
 import AppFeedback from '@/components/main/pages_sections/home/HomeFeedBack'
 export default {
   head: {
-    title: 'Контакты'
+    title: `Контакты | ${process.env.appName}`
   },
   components: {
     AppYaMap,

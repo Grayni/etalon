@@ -31,6 +31,12 @@
 import {validateForm} from '@/plugins/mixins'
 export default {
   mixins: [validateForm],
+  props: {
+    articleId: {
+      type: String,
+      required: true
+    }
+  },
   data() {
     return {
       loading: false,
@@ -42,18 +48,20 @@ export default {
   },
   methods: {
     onSubmit(formName) {
-      this.$refs[formName].validate((valid) => {
+      this.$refs[formName].validate(async valid => {
         if (valid) {
           this.loading = true
 
           const formData = {
             name: this.controls.name,
             text: this.controls.text,
-            postId: ''
+            articleId: this.articleId
           }
 
           try {
-            this.$emit('created')
+            const newComment = await this.$store.dispatch('comment/create', formData)
+
+            this.$emit('created', newComment)
             this.$message.success('Комментарий успешно отправлен на модерацию!')
           } catch (e) {
             this.loading = false

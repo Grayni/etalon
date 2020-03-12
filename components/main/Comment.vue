@@ -1,17 +1,22 @@
 <template lang="pug">
   el-card.comment(shadow="never")
     .comment-header
-      span Person Name
+      span {{comment.name}}
       span
         i.el-icon-time
-        |  {{ new Date().toLocaleString() }}
+        |  {{ comment.date | date }}
     .comment-text
-      p Zombie ipsum reversus ab viral inferno, nam rick grimes malum
+      p {{comment.text}}
 </template>
 
 <script>
 export default {
-  props: ['comment']
+  props: {
+    comment: {
+      type: Object,
+      required: true
+    }
+  }
 }
 </script>
 

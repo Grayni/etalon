@@ -1,15 +1,17 @@
 <template lang="pug">
   .admin-layout
     el-container
-      el-aside(width="250px")
+      el-aside(width="260px")
         app-aside
-      el-main
+      el-main.main-content
         nuxt
 </template>
 
 <script>
 import AppAside from '@/components/admin/Aside'
+import {setError} from '@/plugins/mixins'
 export default {
+  mixins: [setError],
   components: {
     AppAside
   }
@@ -24,6 +26,7 @@ export default {
   .el
     &-container
       height 100%
-    &-aside
-      //
+    &-main
+      background-color #fffdec
+      padding 40px
 </style>

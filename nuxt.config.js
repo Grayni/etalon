@@ -13,7 +13,7 @@ module.exports = {
     ]
   },
 
-  loading: { color: '#fff' },
+  loading: { color: '#429ce3' },
 
   css: [
     // 'element-ui/lib/theme-chalk/index.css',
@@ -22,7 +22,8 @@ module.exports = {
   ],
   
   plugins: [
-    '@/plugins/globals'
+    '@/plugins/globals',
+    '@/plugins/axios'
   ],
   
   buildModules: [
@@ -36,10 +37,15 @@ module.exports = {
       coordorder: 'latlong',
       version: '2.1'
     }],
-    'nuxt-user-agent'
+    'nuxt-user-agent',
+    '@nuxtjs/pwa'
   ],
   
   axios: {
+  },
+
+  env: {
+    appName: 'ЦБО "Эталон"'
   },
 
   build: {

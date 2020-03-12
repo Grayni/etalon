@@ -3,7 +3,7 @@
     el-col
       h2 Акции на бухгалтерское обслуживание
       .famous-wrap-container
-        .benefit(v-for="(benefit,id) in benefits" :key="id+uid")
+        .benefit(v-for="(benefit,id) in benefits" :key="id+_uid")
           .img
             .img-in
               .img-box

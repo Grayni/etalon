@@ -24,6 +24,21 @@ body
       height auto
       line-height 25px
       padding 20px
+  .el
+    &-table
+      .cell
+        word-break normal
+    &-select-dropdown__wrap
+      overflow auto
+    &-upload-dragger
+      min-height 200px
+
+  .mb
+    margin-bottom 1.5rem
+  .mb05rem
+    margin-bottom 0.5rem
+  .mr05rem
+    margin-right 0.5rem
 
 h1,h2,h3,h4,h5
   text-align center
@@ -50,9 +65,6 @@ h2
   @media (max-width 790px)
     padding-top 80px
 
-.mr05rem
-  margin-right 0.5rem
-
 .gray
   background #373737
   position relative
@@ -62,6 +74,18 @@ h2
 
 .main-layout
   min-height 100vh
+
+.admin-layout
+  .el
+    &-input__inner,
+    &-textarea__inner
+      background #fff
+    &-dialog
+      &__title
+        font 18px h
+        color #aaa
+        text-transform uppercase
+      
 
 .page
   &-enter-active,

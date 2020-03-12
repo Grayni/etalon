@@ -12,12 +12,11 @@
       :key="idx"
       :index="'/'+item.link"
     )
-      //-:index="idx+1+''"
       nuxt-link.el-link.link(
-        ref="menu1"
         :underline="false"
-        :to="item.link"
+        :to="`/${item.link}`"
       ) {{item.name}}
+
     transition(name="fade")
       .element-logo(v-if="!isActive")
         app-logo.logo(
@@ -32,7 +31,7 @@
     )
       nuxt-link.el-link.link(
         :underline="false"
-        :to="item.link"
+        :to="`/${item.link}`"
       ) {{item.name}}
 </template>
 <script>
@@ -61,26 +60,6 @@ export default {
       
     }
   }
-  // watch: {
-  //   $route () {
-  //     this.changeTab()
-  //   }
-  // },
-  // methods: {
-  //   clickLogo() {
-  //     this.$refs.menu1[0].$el.click()
-  //   },
-  //   changeTab() {
-  //     const [menuItems] = this.$refs.menu1
-  //       .concat(this.$refs.menu2)
-  //       .filter(x=>x.to === this.$route.path)
-
-  //     if (menuItems) menuItems.$el.click()
-  //   }
-  // },
-  // mounted() {
-  //   this.changeTab()
-  // }
 }
 </script>
 <style lang="stylus" scoped>

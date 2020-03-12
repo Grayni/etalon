@@ -17,7 +17,7 @@
               app-mobile-navigation
     el-main
       transition(name='gradually')
-        app-wrapper-question(v-if="(/questions/g).test(this.$route.path)")
+        app-wrapper-question(v-if="reg.test(this.$route.path)")
           nuxt
         div(v-else)
           nuxt
@@ -55,7 +55,8 @@ export default {
   data() {
     return {
       hamburgState: false,
-      isActive: false
+      isActive: false,
+      reg: new RegExp('^(\/questions)')
     }
   },
   methods: {
@@ -65,11 +66,6 @@ export default {
     something() {
       const deviceType = this.$ua.deviceType()
       this.deviceType = deviceType
-    },
-    pathExist() {
-      let path = /questions/g
-      console.log((/questions/g).test(this.$route.path), this.$route.path)
-      return path.test(this.$route.path)
     }
   },
   mounted() {

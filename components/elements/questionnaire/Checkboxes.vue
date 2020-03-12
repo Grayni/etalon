@@ -9,7 +9,7 @@
         el-checkbox-group(v-model="checkboxWatch.checkedItems")
           el-checkbox(
             v-for="(act, id) of information.items"
-            :key="id+uid"
+            :key="id+_uid"
             :label="act"
             border
             name="checkedItems"

@@ -7,7 +7,7 @@
 import AppBenefits from '~/components/main/pages_sections/stocks/Benefits'
 export default {
   head: {
-    title: 'Акции'
+    title: `Акции | ${process.env.appName}`
   },
   components: {
     AppBenefits
