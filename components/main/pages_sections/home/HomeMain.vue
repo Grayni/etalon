@@ -1,8 +1,8 @@
 <template lang="pug">
-  el-row
+  el-row.home-section
     el-col.year(:span="0" :lg="6")
       p {{new Date().getFullYear()}}
-    el-col.name(:xs="24" :lg="12")
+    el-col.name#logo-name(:xs="24" :lg="12")
       .logo-mobile-wrap(v-if="width<791 || (!$ua.isFromPc() && width>790)")
         app-logo(:size="box")
       h1 Etalon
@@ -10,12 +10,22 @@
         h3 Центр бухгалтерского обслуживания
 </template>
 <script>
+let kute, kuteCSS
+
+if (process.client) {
+  kute = require('kute.js')
+  kuteCSS = require('kute.js/kute-css')
+
+}
+
 import AppLogo from '~/components/main/Logo'
 import {widthWatch} from '~/plugins/mixins'
 export default {
   data() {
     return {
-      box: [150, 134]
+      box: [150, 134],
+      timeKute: null,
+      tweenKute: null
     }
   },
   mixins: [
@@ -23,10 +33,20 @@ export default {
   ],
   components: {
     AppLogo
+  },
+  methods: {
+    animationInfo() {
+      this.timeKute = kute
+      this.tweenKute = this.timeKute.fromTo('#logo-name',{scale:'0.93', opacity: '0'}, {scale: '1', opacity: '1'}, {offset: 200, duration: 500}).start()
+    }
+  },
+  mounted() {
+    this.animationInfo()
   }
 }
 </script>
 <style lang="stylus" scoped>
+.home-section
 .el-row
   background-color #464646
   background-image url('/first.png')
@@ -54,9 +74,13 @@ export default {
         color #373737
         text-shadow 4px 4px 5px rgba(0,0,0,.2)
         padding-left 15px
-    &.name
+    &#logo-name
       justify-content center
       padding-bottom 18vh
+      transform scale(0.5)
+      opacity 0
+      position relative
+      top 0
       @media (max-width 900px)
         padding 0
       h3, h1

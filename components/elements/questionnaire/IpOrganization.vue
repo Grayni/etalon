@@ -5,6 +5,7 @@
       v-model="property"
       :active-text="forms[0]"
       :inactive-text="forms[1]"
+      @change="saveOrganizationIp(property)"
     )
 </template>
 
@@ -19,6 +20,17 @@ export default {
       ]
     }
   },
+  methods: {
+    saveOrganizationIp(val) {
+      let obj = {
+        page_2: ''
+      }
+
+      obj.page_2 = (val) ? this.forms[0] : this.forms[1]
+
+      this.$store.commit('sendings/dataQuestionnaire', obj)
+    }
+  }
 }
 </script>
 

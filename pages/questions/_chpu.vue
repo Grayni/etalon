@@ -2,29 +2,39 @@
   article.question
     header.question-header
       .question-breadcrumb
-        nuxt-link.link-item(to="/questions") Вопросы 
-        span / Раздел вопроса / Задаваемый вопрос
+        nuxt-link.link-item(to="/questions") Вопросы
+        span / {{showSectionsLabel(page.section)}} / {{ page.question }}
+
+          .question-head {{ page.question }}
 
     main.question-content
-      p Lorem ipsum dolor sit amet consectetur adipisicing elit. Tenetur aliquam, ipsum quo ut eaque voluptatibus tempore id perferendis sed, impedit obcaecati, magni molestias architecto! Molestias consectetur cum cupiditate fuga! Quidem?
-      div {{dataQuestions}}
+      vue-markdown {{ page.answer }}
+
+      small.view
+        i.el-icon-view
+        span  {{ page.views }}
+
 </template>
 
 <script>
-import dataQuestions from '@/json/dataQuestions.json'
+import {showSectionsLabel} from '@/plugins/mixins'
 export default {
   layout: 'default',
+  mixins: [showSectionsLabel],
   head() {
     return {
-      title: `${this.question} | ${process.env.appName}`
+      title: `${this.page.question} | ${process.env.appName}`,
+      meta: [{
+        hid: `questions-${this.page.chpu}-description`, name: 'description', content: `Ответ на вопрос: ${this.page.question}`
+      }]
     }
   },
-  data() {
-    return {
-      dataQuestions,
-      question: 'test-question'
-    }
-  },
+  async asyncData({store, params}) {
+    let page = await store.dispatch('questions/fetchByChpu', params.chpu)
+    page.views += 1
+    await store.dispatch('questions/addViewQuestion', {views: page.views, id: page._id})
+    return { page }
+  }
 }
 </script>
 
@@ -32,20 +42,28 @@ export default {
 .question
   padding 0 40px 40px 40px
   min-height 100%
+  &-head
+    margin 40px 0 0 0
+    font bold 16px h
   .link-item
     color #429ce3
     text-decoration none
   &-breadcrumb
-    padding 20px 0 5vh 0
+    padding 10px 0 2vh 0
     font-size 12px
+    border-bottom 1px solid #373737
     span
-      color #373737
+      color #777
+      text-transform lowercase
   &-content
     display flex
     justify-content center
     align-items stretch
     width 100%
     flex-direction column
+    font-size 14px
+    padding-top 8vh
+    line-height 20px
     &-wrap
       margin-top 2vh
       border-radius 4px
@@ -68,4 +86,7 @@ export default {
           text-decoration none
           &:hover
             color #dcbc96
+  .view
+    margin-top 30px
 </style>
+

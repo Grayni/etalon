@@ -39,8 +39,8 @@ router.delete(
 // Main
 // /api/questions
 
-router.get('/questions', controller.getAll)
-router.get('/questions/:chpu', controller.getById)
-router.get('/questions/:chpu', controller.addView)
+router.get('/', controller.getAll)
+router.get('/:chpu', controller.getByChpu)
+router.put('/add/view/:id', controller.addViewQuestion)
 
 module.exports = router

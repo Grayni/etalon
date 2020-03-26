@@ -1,12 +1,13 @@
 <template lang="pug">
   el-container.questions
-    el-aside(width="400px")
-      .container-menu
+    el-aside.questions-aside(width="400px")
+      .questions-container-menu
         h3 Вопросы
         .fog-box.top
-        el-menu(
+        el-menu.questions-menu(
           router
           :default-active="$route.path"
+          :unique-opened="true"
         )
           el-submenu(
             v-for="(group, id) of groups"
@@ -14,8 +15,8 @@
             :key="id+_uid"
           )
             template( slot="title")
-              span.group-title {{group.name}}
-            el-menu-item(
+              span.group-title {{ showSectionsLabel(group.section) }}
+            el-menu-item.questions-menu-item(
               v-for="(question, idx) of group.questions"
               :key="id+idx+2+_uid"
               :index="'/questions/'+translit(question)"
@@ -24,83 +25,48 @@
         .fog-box.bottom
 
     el-container
-      el-header
-        h3 {{this.header}}
       el-main
         slot
-    //- :index="'/'+translit(question)"
-    //- :index="String(`${id+1}-${idx+1}`)"
 </template>
 
 <script>
-import {transliter} from '@/plugins/mixins'
+import {transliter, showSectionsLabel} from '@/plugins/mixins'
 export default {
-  mixins: [transliter],
+  mixins: [transliter, showSectionsLabel],
   data() {
     return {
       header: 'Часто задаваемые вопросы',
       chpu: '',
-      groups: [
-        {
-          name: 'О компании',
-          questions: [
-            'В какой организационной форме образована компания? Зарегистрирован ли центр в ЕГРЮЛ?',
-            'Какие виды деятельности осуществляет центр бухгалтерского обслуживания «Эталон»?',
-            'На какой территории ведется деятельность? Кто может стать вашим клиентом?'
-
-          ]
-        },
-        {
-          name: 'О сотрудничестве',
-          questions: [
-            'Где работают специалисты? Что делать, если у клиента нет подходящего помещения?',
-            'Как организуется хранение документов? Будет ли у компании-клиента архив?',
-            'Как обеспечивается конфиденциальность? Какие гарантии у клиента?',
-            'Как происходит обмен документами? Что, если справка требуется срочно?'
-          ]
-        },
-        {
-          name: 'О ценах и порядке оплаты',
-          questions: [
-            'Как рассчитывается стоимость обслуживания в центре? От чего зависят цены?',
-            'Как организуются расчеты? Принимаете ли вы оплату наличными деньгами?',
-            'Как проверить, все ли предъявленные к оплате услуги оказаны?',
-            'Есть ли у вас льготные программы обслуживания? Какие бонусы получают постоянные клиенты?',
-            'В какие сроки производится оплата? Есть ли у вас система отсрочек?',
-            'Как часто меняются тарифы? Что если счет окажется выше, чем мы запланировали?'
-          ]
-        },
-        {
-          name: 'Об ответственности',
-          questions: [
-            'Кто несет ответственность за ошибки в отчетах и несвоевременность сдачи деклараций?',
-            'Что подразумевается под формулировкой «форс-мажор» в договоре об обслуживании?',
-            'Как часто возникают споры между клиентами и центром? В каком порядке проводится урегулирование?'
-          ]
-        },
-        // {
-        //   name: 'О тарифах',
-        //   questions: []
-        // },
-        // {name: 'Про налоговую оптимизацию'},
-        // {name: 'Про кадры'},
-        // {name: 'О восстановлении учета'},
-        // {name: 'Про финансовые консультации'},
-        // {name: 'О регистрации организации(ип)'},
-        // {name: 'О "нулевке"'},
-        // {name: 'О задолженностях'}
-      ]
+      sections: [],
+      groups: [],
+      dataInfo: null
     }
   },
   methods: {
-    // selectMenuItem(key, keyPath) {
-    //   this.header = this.groups[+keyPath[0]].questions[this.indexItem]
-    // },
     openItem(quest) {
       this.header = quest
       this.chpu = this.translit(quest)
       this.$router.push(`/questions/${this.chpu}`)
+
+      this.answer = this.dataInfo.filter(x => x.chpu === this.chpu)
+    },
+
+    async getMenu() {
+      this.dataInfo = await this.$store.dispatch('questions/fetch')
+
+      this.sections = this.dataInfo.map(x =>x.section)
+      const arraySections = Array.from(new Set(this.sections)) // unique values Array
+
+      for (let i=0; i<arraySections.length; i++) {
+        let section = arraySections[i]
+        let questions = this.dataInfo.filter(x => x.section === section).map(x => x.question)
+        let obj = {section, questions}
+        this.groups.push(obj)
+      }
     }
+  },
+  created() {
+    this.getMenu()
   }
 }
 </script>
@@ -109,13 +75,18 @@ export default {
 .questions
   padding 170px 0 20px 0
   min-height 100%
+  z-index -1
   @media (max-width 790px)
     padding-top 80px
-.el
+    display flex
+    flex-direction column
   &-aside
     display flex
     justify-content center
     align-items flex-start
+    @media (max-width 790px)
+      width 100%!important
+      padding-top 20px
   &-menu
     overflow-y auto
     overflow-x hidden
@@ -124,29 +95,30 @@ export default {
     min-width 280px
     padding 30px 0
     position relative
+    @media (max-width 790px)
+      max-width 100%
+      min-width 100%
+      height auto
     &-item
       white-space normal
       height auto
       line-height 22px
       padding 20px
       font-size 14px
-  &-header
-    color #252525
-    border-bottom solid 1px #e6e6e6
-    display flex
-    justify-content flex-end
-    h3
-      font-size 16px
-      padding-right 10vw
-      text-transform none
-.container-menu
-  position fixed
+
+  &-container-menu
+    position fixed
+    @media (max-height 600px)
+      bottom 120px
+    @media (max-width 790px)
+      position relative
+      width 100%
 .fog-box
   height 60px
   pointer-events none
   position absolute
   width 100%
-  z-index 2222
+  z-index 1001
   &.top
     top 64px
     background linear-gradient(0deg, rgba(255,253,236,0) 0%, rgba(255,253,236,1) 100%)
@@ -157,4 +129,5 @@ export default {
 .group-title
   font bold 14px h
   margin-right 22px
+
 </style>

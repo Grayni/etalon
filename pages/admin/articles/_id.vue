@@ -1,7 +1,7 @@
 <template lang="pug">
-  .page-wrap
+  .admin-article
     app-breadcrumb(:way="data")
-    h2 Редактор статьи
+    h2.admin-article-title Редактор статьи
     el-form(
       :model="controls",
       :rules="rules",
@@ -11,12 +11,37 @@
       el-form-item.name-service(label="Изменение названия статьи" prop="title")
         el-input.input-service(v-model="controls.title")
 
+      el-form-item.name-service(label="Измененить описание" prop="description")
+        el-input.input-service(v-model="controls.description")
+
       el-form-item(label="Текст в формате .md или .html", prop="article")
         el-input(
           type="textarea"
           v-model="controls.article"
-          :rows="10"
+          :rows="30"
         )
+
+        el-button.mb05rem(type='default' plain @click="previewArticle = true") Предпросмотр
+
+        el-dialog(
+          title="Предпросмотр статьи"
+          :visible.sync="previewArticle"
+        )
+          div(:key="controls.article")
+            vue-markdown.mark-style
+              | {{ controls.article }}
+
+        el-upload.mb(
+          drag
+          action="https://jsonplaceholder.typicode.com/posts/"
+          :on-change="handleImageChange"
+          :on-remove="clearImage"
+          ref="upload"
+          :auto-upload="false"
+        )
+          i.el-icon-upload
+            .el-upload__text Перетащите картинку <em>или нажмите</em>
+            .el-upload__tip(slot="tip") Файлы с расширением jpg/png не более 500kb
 
       .mb
         small
@@ -26,6 +51,8 @@
         small.ml
           i.el-icon-view
           span  {{article.views}}
+
+
 
       el-form-item.button-wrap
         el-button(
@@ -40,7 +67,7 @@
 
 <script>
 import AppBreadcrumb from '@/components/admin/Breadcrumb'
-import {validateForm, validateId} from '@/plugins/mixins'
+import {validateForm, validateId, transliter} from '@/plugins/mixins'
 export default {
   layout: 'admin',
   middleware: 'admin-auth',
@@ -49,7 +76,7 @@ export default {
       title: `Статья | ${this.article.title} | ${process.env.appName}`
     }
   },
-  mixins: [validateForm, validateId],
+  mixins: [validateForm, validateId, transliter],
   components: {
     AppBreadcrumb
   },
@@ -59,6 +86,8 @@ export default {
   },
   data() {
     return {
+      previewArticle: false,
+      image: null,
       data: {
         path: '/admin/articles-list',
         name: 'Список статей',
@@ -67,7 +96,8 @@ export default {
       loading: false,
       controls: {
         title: '',
-        article: ''
+        description: '',
+        article: '',
       }
     }
   },
@@ -77,13 +107,30 @@ export default {
         if (valid) {
           this.loading = true
 
-          const formData = {
-            text: this.controls.article,
-            title: this.controls.title,
-            id: this.article._id
+          let date = new Date().toISOString()
+
+          let formData = {}
+          if (Boolean(this.image)) {
+            formData = {
+              title: this.controls.title,
+              description: this.controls.description,
+              text: this.controls.article,
+              image: this.image,
+              id: this.article._id,
+              date
+            }
+          } else {
+            formData = {
+              title: this.controls.title,
+              description: this.controls.description,
+              text: this.controls.article,
+              id: this.article._id,
+              date
+            }
           }
 
           try {
+            this.article.date = date
             await this.$store.dispatch('articles/update', formData)
             this.$message.success('Статья обновлена!')
           } catch(e) {} finally {
@@ -91,22 +138,33 @@ export default {
           }
         }
       })
+    },
+    handleImageChange(file, fileList) {
+      this.image = file.raw
+    },
+    clearImage() {
+      this.image = null
     }
   },
   created() {
     this.data.title = this.article.title
     this.controls.title = this.article.title
     this.controls.article = this.article.text
+    this.controls.description = this.article.description
   }
 }
 </script>
 
-<style lang="stylus" scoped>
-.page-wrap
-  max-width 900px
+<style lang="stylus">
+@import "../../../assets/article.styl"
+.admin-article
+  max-width 1400px
   .ml
     margin-left 2rem
-  h2
+  .mb
+    &05rem
+      margin-top 14px
+  &-title
     font-size 20px
     margin-top 50px
 </style>

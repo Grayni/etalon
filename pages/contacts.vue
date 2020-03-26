@@ -17,7 +17,10 @@ import AppContactsData from '~/components/main/pages_sections/contacts/ContactsD
 import AppFeedback from '@/components/main/pages_sections/home/HomeFeedBack'
 export default {
   head: {
-    title: `Контакты | ${process.env.appName}`
+    title: `Контакты | ${process.env.appName}`,
+    meta: [{
+      hid: 'contacts-description', name: 'description', content: 'Информация о компании ЦБО «Эталон» - адреса, время работы и удаленность офиса от метро'
+    }]
   },
   components: {
     AppYaMap,
@@ -59,7 +62,8 @@ export default {
   height 100%
   background white
   margin-right 2vw
-
+  @media (max-width 767px)
+    padding-top 40px
 .requisites-wrap
   padding-left 2vw
   h2
@@ -77,7 +81,4 @@ export default {
     display flex
     align-items center
     justify-content flex-end
-    .gray
-      margin-right 2vw
-      padding 0 20px 0 35px
 </style>

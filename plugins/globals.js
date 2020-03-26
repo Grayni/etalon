@@ -4,7 +4,10 @@ import Element from 'element-ui'
 
 import VueTheMask from 'vue-the-mask'
 import locale from 'element-ui/lib/locale/lang/ru-RU'
+
 import DateFilter from '@/common/filters/date.filter'
+import SignFilter from '@/common/filters/sign.filter'
+import Capital from '@/common/filters/capital.filter'
 
 Vue.use(VueTheMask)
 Vue.use(Element, { locale })
@@ -23,3 +26,5 @@ Vue.directive('scroll', {
 Vue.component('vue-markdown', VueMarkdown)
 
 Vue.filter('date', DateFilter)
+Vue.filter('sign', SignFilter)
+Vue.filter('capital', Capital)

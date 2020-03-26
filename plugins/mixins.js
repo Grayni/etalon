@@ -52,7 +52,6 @@ export const transliter = {
         if (ru[key]) n_str.push(ru[key])
         else n_str.push(key)
       }
-
       return n_str.join('');
     }
   }
@@ -131,6 +130,11 @@ export const validateForm = {
             required: true, message: 'Название обязательно', trigger: 'blur'
           }
         ],
+        description: [
+          {
+            required: true, message: 'Описание необходимо для продвижения', trigger: 'blur'
+          }
+        ],
         price: [
           {
             required: true, message: 'Цена обязательна', trigger: 'blur'
@@ -152,7 +156,27 @@ export const validateId = {
   }
 }
 
-export const questionSections = {
+export const setError = {
+  computed: {
+    error() {
+      return this.$store.getters.error
+    }
+  },
+  watch: {
+    error(value) {
+      if (value.response.data.message) {
+        this.$message({
+          type: 'error',
+          showClose: true,
+          message: value.response.data.message,
+          center: true
+        })
+      }
+    }
+  }
+}
+
+export const showSectionsLabel = {
   data() {
     return {
       options: [
@@ -196,24 +220,19 @@ export const questionSections = {
       ]
     }
   },
+  methods: {
+    showSectionsLabel(section) {
+      const needValue = this.options.filter(x => x.value === section)[0]
+      return needValue.label
+    }
+  }
 }
 
-export const setError = {
-  computed: {
-    error() {
-      return this.$store.getters.error
-    }
-  },
-  watch: {
-    error(value) {
-      if (value.response.data.message) {
-        this.$message({
-          type: 'error',
-          showClose: true,
-          message: value.response.data.message,
-          center: true
-        })
-      }
+export const capital = {
+  methods: {
+    capital(word) {
+      word = word.replace(/^\w/, x => x.toUpperCase())
+      return word
     }
   }
 }

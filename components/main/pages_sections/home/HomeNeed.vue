@@ -104,6 +104,7 @@ export default {
   display flex
   justify-content center
   align-items center
+  opacity 0
   .el-row
     width 100%
     padding 0 10vw

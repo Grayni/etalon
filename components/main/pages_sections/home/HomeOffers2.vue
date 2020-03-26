@@ -2,7 +2,7 @@
   el-row.offers2
     .bg-offer
     el-col.gird-content(:span="24")
-      .container-offers
+      .container-offers(:class="{'second-offers': $ua.isFromPc()}")
         .img(v-if="width>1330")
         app-card-offer(
           v-for="(offer, id) of offers"
@@ -83,6 +83,10 @@ export default {
     right 4vw
     top -100px
     padding-right 10vw
+    &.second-offers
+      width 30vw
+      right 100vw
+      opacity 0
     @media (max-width 1500px)
       padding-right 0
     @media (max-width 1330px)
@@ -95,7 +99,7 @@ export default {
       padding-top 0
 .img
   background-image url('/skyscraper.jpg')
-  background-size 900px 600px
+  background-size 600px 600px
   background-position 0 0
   width 600px
   height 600px

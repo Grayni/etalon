@@ -109,10 +109,6 @@ export default {
 
         this.$message.success('Статья успешно удалена!')
       } catch(e) {}
-    },
-
-    test(data) {
-      console.log(data)
     }
   }
 }

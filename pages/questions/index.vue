@@ -15,7 +15,10 @@
 import {transliter} from '@/plugins/mixins'
 export default {
   head: {
-    title: `Вопросы | ${process.env.appName}`
+    title: `Вопросы | ${process.env.appName}`,
+    meta: [{
+      hid: 'questions-description', name: 'description', content: 'В данном разделе собраны часто задаваемые вопросы. Здесь Вы можете познакомиться с политикой нашей компании и более подробно изучить наш подход к вендению бухгалтерского учета.'
+    }]
   },
   layout: 'default',
   mixins: [

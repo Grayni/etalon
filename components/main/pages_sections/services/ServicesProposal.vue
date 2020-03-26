@@ -13,37 +13,62 @@
             p
               span.header {{offer.header}}
       el-col.feedback(:xs="24" :lg="12")
-        .feedback-card
+        .feedback-card(:class="{'active-card': isCardClick}" @click="isCardClick = true")
           h2 оставить заявку
-            .back-wrap
-              .back
-                form
-                  el-input(
-                    name="name"
-                    placeholder="Ваше имя"
-                    v-model="input.name"
-                    clearable
-                    maxlength="10"
-                    show-word-limit
-                  )
-                form
-                  el-input(
-                    name="number"
-                    placeholder="Ваш номер телефона"
-                    v-model="input.phone"
-                    clearable
-                    maxlength="10"
-                    show-word-limit
-                  )
-                el-button(@click.prevent="returnTest()" type="primary") Связаться
+          el-form.back(
+            ref="send-phone"
+            :model="controls"
+            :rules="rules"
+            @submit.native.prevent="onSubmit('send-phone')"
+          )
+            el-form-item(prop="name")
+              el-input(
+                placeholder="Ваше имя"
+                v-model="controls.name"
+                clearable
+                maxlength="30"
+                show-word-limit
+              )
+            el-form-item(prop="phone")
+              el-input(
+                v-model="controls.phone"
+                clearable
+                placeholder="Ваш номер телефона"
+                v-mask="'(###) ###-##-##'"
+                show-word-limit
+              )
+                template(slot="prepend") +7
+
+            el-form-item(prop="agree")
+              el-checkbox(
+                v-model="controls.agree"
+                label="Согласие на обработку персональных данных"
+                name="agree"
+              )
+                | Согласие на обработку 
+                a.link(href="/politic.pdf" target="_blank") персональных данных
+
+            el-form-item
+              .wrap-button
+                el-button(
+                  type="success"
+                  native-type="submit"
+                  :loading="loading"
+                ) Связаться
 </template>
 <script>
-import AppMiniCard from '~/components/slots/MiniCard'
+import {validateForm} from '@/plugins/mixins'
+import AppMiniCard from '@/components/slots/MiniCard'
 
 export default {
+  mixins: [validateForm],
   data() {
     return {
-      input: {
+      loading: false,
+      isCardClick: false,
+      controls: {
+        agree: ['Согласие на обработку персональных данных'],
+        type: 'Услуги - первый экран',
         name: '',
         phone: ''
       },
@@ -102,7 +127,19 @@ export default {
     AppMiniCard
   },
   methods: {
-    returnTest() {
+    onSubmit(formName) {
+      this.$refs[formName].validate(async valid => {
+        if (valid) {
+          this.loading = true
+
+          try {
+            await this.$store.dispatch('sendings/question', this.controls)
+            this.controls.name = ''
+            this.controls.phone = ''
+            this.$message.success('Заявка успешно отправлена!')
+          } catch(e) {} finally { this.loading = false }
+        }
+      })
     }
   }
 }
@@ -152,26 +189,38 @@ export default {
   @media(max-width 1199px)
     padding-top 70px
   &-card
-    background #373737
+    background rgba(33,33,27,.5)
+    opacity .4
     border-radius 4px
     padding 30px
     width 100%
     height 100%
     max-width 600px
     box-shadow 1px 1px 7px rgba(0,0,0,.3)
+    &.active-card
+      opacity 1
+      transition opacity .5s ease
   h2
-    margin 0
+    margin 0 0 10px 0
     color #fffdec
-  .el-input
-    margin-top 20px
-  .el-button
-    text-transform uppercase
-    margin-top 20px
+  .el
+    &-input
+      margin-top 10px
+    &-button
+      text-transform uppercase
+      margin-top 10px
+  .wrap-button
+    display flex
+    justify-content center
+
 .container-offers
   max-width 600px
   display flex
   flex-wrap wrap
   justify-content center
   align-items center
-
+.link
+  color #429ce3
+  &:hover
+    color #92bfe3
 </style>

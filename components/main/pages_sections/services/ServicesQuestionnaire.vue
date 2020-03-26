@@ -8,7 +8,7 @@
 
     transition(name="fade")
       el-col.fly-box(:span="24" v-if="activeCard")
-        el-card.box-card(v-for="(card, id) in cardArray" :key="id+_uid" v-if="card.status")
+        el-card.box-card(v-for="(card, id) in cardArray" :key="id+_uid" v-show="card.status")
           .clearfix(slot="header")
 
 
@@ -23,7 +23,7 @@
             .line-container
               .line(:style="{width: (id)/(cardArray.length-1)*100+'%'}")
 
-            div(:is="card.content" :information="card.data")
+            div(:is="card.content" :information="card.data" @clicker="renderCard")
 
 
           .footer-block(:class="{'start': id === 0}")
@@ -122,6 +122,17 @@ export default {
       this.cardArray.map(x=>x.status = false)
       this.cardArray[0].status = true
       this.activeCard = !this.activeCard
+      let obj = {
+        type: 'Анкета',
+        page_1: [],
+        page_2: 'Индивидуальный предприниматель (ИП)',
+        page_3: [],
+        page_4: 0,
+        page_5: 0,
+        page_6: 0
+      }
+      this.$store.commit('sendings/dataQuestionnaire', obj)
+      this.$store.commit('sendings/dataMail', null)
     },
     cardStatusDown() {
       for (let i=0; i<this.cardArray.length; i++) {
@@ -137,6 +148,24 @@ export default {
     cardStatusUp(formName) {
       for (let i=0; i<this.cardArray.length; i++) {
         if (this.cardArray[i].status) {
+          if (i === 0) {
+            let val = this.$store.state.sendings.questionnaire.page_1
+
+            if (val.length === 0) {
+              this.$message.error('Необходимо выбрать хотя бы один вид деятельности')
+              break
+            }
+          } else if (i === 2) {
+            let val = this.$store.state.sendings.questionnaire.page_3
+
+            if (val.length === 0) {
+              this.$message.error('Необходимо выбрать хотя бы одну систему налогообложения')
+              break
+            }
+          } else if (i === 5) {
+            let fullDataCompany = this.$store.state.sendings.questionnaire
+            this.$store.commit('sendings/dataMail', fullDataCompany)
+          }
           this.cardArray[i].status = false
           if (this.cardArray[i+1]) {
             this.cardArray[i+1].status = true
@@ -184,73 +213,11 @@ export default {
     h2, p
       color #fffdec
 
-.fly-box
-  display flex
-  justify-content center
-  align-items center
-  position fixed
-  top 0
-  left 0
-  background-color rgba(0,0,0,.7)
-  min-height 100vh
-  min-width 100vw
-  z-index 3
-  .box-card
-    background-color #373737
+  .el-card__header
     border none
-    box-shadow 2px 2px 7px rgba(0,0,0,.5)
-    max-width 1024px
-    max-height 700px
-    width 90vw
-    height 90vh
-    min-height 300px
-    min-width 320px
-    display flex
-    flex-direction column
-    color #b8b8b8
-.clearfix
-  &:before,&:after
-    display table
-    content ""
-  &:after
-    clear both
-.el-card__header
-  border none
 
-.cross
-  width 20px
-  height 20px
-  background-color #F56C6C
-  display block
-  cursor pointer
-  border-radius 5px
-  &:before
-    content '✕'
-    font-size 19px
-    display inline-block
-    position relative
-    color #fffdec
-    top -4px
-    right -2px
-  &:hover
-    background #EA6767
-.wrap-header-card
-  display flex
-  justify-content space-between
-
-.content-block
-  flex 1 0 auto
-  display flex
-  align-items center
-  flex-direction column
-.footer-block
-  width 100%
-  flex 0 0 auto
-  display flex
-  justify-content space-between
-  &.start
-    justify-content flex-end
-
+  .wrap-header-card
+    justify-content space-between
 .fade
   &-enter-active
     transition opacity .5s ease
@@ -265,12 +232,4 @@ export default {
   font bold 12px h
   color #429ce3
 
-.line-container
-  width 100%
-  height 4px
-  background-color #aaa
-  margin-bottom 20px
-  .line
-    height 100%
-    background-color #429ce3
 </style>

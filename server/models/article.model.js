@@ -5,6 +5,15 @@ const articleSchema = new Schema({
     type: String,
     required: true
   },
+  chpu: {
+    type: String,
+    required: true,
+    unique: true
+  },
+  description: {
+    type: String,
+    required: true
+  },
   text: {
     type: String,
     required: true

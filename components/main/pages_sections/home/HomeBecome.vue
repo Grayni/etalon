@@ -6,7 +6,6 @@
       el-tabs(
         v-model="activeName"
         :stretch="true"
-        @tab-click="handleClick"
       )
 
         el-tab-pane(
@@ -71,11 +70,6 @@ export default {
   },
   components: {
     AppTitle
-  },
-  methods: {
-    handleClick(tab, event) {
-      console.log(tab, event);
-    }
   }
 }
 </script>
@@ -165,6 +159,7 @@ export default {
       align-items center
       padding 100px 0 0 0
       max-width 1400px
+      opacity 0
 
 
   .block-items

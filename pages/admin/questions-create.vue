@@ -23,7 +23,8 @@
 
       el-form-item(label="Название вопроса", prop="title")
         el-input(
-          v-model="controls.title"
+          v-model="controls.title",
+          @blur="controls.translit = translit(controls.title)"
         )
 
       el-form-item(label="Ответ на вопрос", prop="article")
@@ -34,7 +35,7 @@
           :rows="10"
         )
 
-      el-button.mb05rem(type='default' plain @click="previewArticle = true") Предпросмотр
+      el-button.mb05rem(type="default" plain @click="previewArticle = true") Предпросмотр
 
       el-dialog(
         title="Предпросмотр ответа на вопрос"
@@ -43,7 +44,6 @@
         div(:key="controls.article")
           vue-markdown
             | {{ controls.article }}
-
       .mb
 
       el-form-item.button-wrap
@@ -56,11 +56,11 @@
 </template>
 
 <script>
-import {validateForm, questionSections} from '@/plugins/mixins'
+import {validateForm, showSectionsLabel, transliter} from '@/plugins/mixins'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
-  mixins: [validateForm, questionSections],
+  mixins: [validateForm, showSectionsLabel, transliter],
   head: {
     title: `Создать вопрос | ${process.env.appName}`
   },
@@ -71,7 +71,8 @@ export default {
       controls: {
         section: '',
         title: '',
-        article: ''
+        article: '',
+        translit: ''
       }
     }
   },
@@ -84,7 +85,8 @@ export default {
           const formData = {
             section: this.controls.section,
             question: this.controls.title,
-            answer: this.controls.article
+            answer: this.controls.article,
+            chpu: this.controls.translit
           }
 
           try {

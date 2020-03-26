@@ -18,8 +18,7 @@
           header-align="center"
         )
           template(slot-scope="{row: {activators}}")
-            span.sign(v-if="activators[0]") +
-            span.sign(v-else) -
+            span.sign {{activators[0] | sign}}
         el-table-column(
           label="Lite"
           width="85"
@@ -27,8 +26,7 @@
           header-align="center"
         )
           template(slot-scope="{row: {activators}}")
-            span.sign(v-if="activators[1]") +
-            span.sign(v-else) -
+            span.sign {{activators[1] | sign}}
         el-table-column(
           label="Optimal"
           width="85"
@@ -36,8 +34,7 @@
           header-align="center"
         )
           template(slot-scope="{row: {activators}}")
-            span.sign(v-if="activators[2]") +
-            span.sign(v-else) -
+            span.sign {{activators[2] | sign}}
         el-table-column(
           label="Maximum"
           width="85"
@@ -45,8 +42,7 @@
           header-align="center"
         )
           template(slot-scope="{row: {activators}}")
-            span.sign(v-if="activators[3]") +
-            span.sign(v-else) -
+            span.sign {{activators[3] | sign}}
 
         el-table-column(
           prop="price",
@@ -159,7 +155,7 @@ export default {
 
           const formData = {
             title: this.controls.title,
-            activators: this.switches,
+            activators: this.controls.switches,
             price: this.controls.price,
             id: this.service._id
           }

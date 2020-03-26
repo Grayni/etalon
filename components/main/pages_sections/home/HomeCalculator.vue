@@ -18,6 +18,7 @@
                     ref="systemBlock"
                     @change="changeSlider($event, 'system', sliders.system.memory)"
                     :placement="'left'"
+                    @input="showSystem(sliders.system.data[$event])"
                   )
                 .wrap-sld
                   h3.name-value Количество операций
@@ -28,6 +29,7 @@
                     :max="12"
                     :format-tooltip="changeOperationsName"
                     @change="changeSlider($event, 'operations', sliders.operations.memory)"
+                    @input="showOperation($event)"
                   )
                 .container-humans
                   transition(name="fade-humans")
@@ -37,6 +39,7 @@
                         el-input-number(
                           v-model="sliders.humans.def"
                           @change="changeHumans($event)"
+                          @input="showHuman($event)"
                           size="large"
                           :min="0"
                           :max="100"
@@ -50,9 +53,10 @@
                 .wrap-sld
                   h3.name-value Дополнительные условия
                   .wrap-conditions
-                    .condition(v-for="(switcher, id) of switches" :key="id+_uid")
-                      el-switch(v-model="switcher.switch")
+                    .condition(v-for="(switcher, id) in switches" :key="`${_uid}_${id}`")
+                      el-switch(v-model="switcher.switch" @change="sw1(switcher.switch, id, switcher.percent)")
                       p {{switcher.name}}
+
       el-col.right-calc(:lg="6" :span="24")
         el-row.calculator
           el-col.gird-content(:span="24")
@@ -72,12 +76,13 @@
                       height="200px"
                       :marks="sliders.rates.data"
                       :min="0"
-                      :max="3"
+                      :max="Object.keys(this.sliders.rates.data).length-1"
                       :format-tooltip="changeRatesName"
-                      @change="changeSlider($event, 'rates', sliders.rates.memory)"
+                      @change="changeSlider($event, 'rates', sliders.system)"
+                      @input="showRate($event, sliders.rates.data)"
                     )
                   .condition.staff
-                    el-switch(v-model="staff")
+                    el-switch(v-model="staff" @change="changeStaff")
                     p Вы = ИП без сотрудников
                 el-col.rate-col.right(:xs="24" :lg="24" :span="12")
                   .container-cost
@@ -86,61 +91,75 @@
                       .container-name.cost
                         .glass
                         .computer-name
-                          span.num {{cost}}
-                          span.sign ₽
+                          .wrap-cost
+                            span.num {{result}}
+                            span.sign ₽
+                          span.condition(v-if="!positions.operations && !positions.humans") в квартал
+                          span.condition(v-else) в месяц
                   .wrap-button
-                    el-button.call(type="info" plain)
+                    el-button.call(type="info" plain @click="showBackForm")
                       |Обсудить
                       span.asterisk *
                   .wrap-footnote
-                    p Узнать подробнее о цене и альтернативных предложениях. Бесплатный расчет от бухгалтера в выборе более выгодной системы налогообложения.
+                    p Узнать подробнее о цене и альтернативных предложениях. Бесплатный расчет от бухгалтера для выбора более выгодной системы налогообложения.
 
 </template>
 <script>
 import {Slider} from '@/classes/slider'
-import AppTitle from '~/components/slots/Title'
+import AppTitle from '@/components/slots/Title'
+import {capital} from '@/plugins/mixins'
 
 export default {
+  mixins: [capital],
   components: {
     AppTitle
   },
+  props: {
+    calculates: {
+      type: Array,
+      required: true
+    }
+  },
   data() {
     return {
+      server: {
+        obj: {},
+        row: {},
+        cost: 0,
+        perc: 1
+      },
+      humansCost: 0,
+      positions: {
+        operations: 0,
+        humans: 0,
+        system: 'usn_6',
+        rate: 'optimal'
+      },
+      serverDestributor: {
+        rates: {},
+        operations: {}
+      },
       staff: false,
-      cost: 7000,
       switches: [
-        {switch: false, name: 'Совмещение различных систем налогообложения'},
-        {switch: false, name: 'Ведение раздельного учета при применении разных ставок НДС'},
-        {switch: false, name: 'Осуществление внешнеэкономической деятельности'},
-        {switch: false, name: 'Наличие повременной оплаты труда'},
-        {switch: false, name: 'Наличие курсовой разницы'},
-        {switch: false, name: 'Наличие недвижимости'},
-        {switch: false, name: 'Наличие обособленных подразделений'},
-        {switch: false, name: 'Алкогольная декларация'},
-        {switch: false, name: 'Наличие контрольно-кассовой техники'}
+        {switch: false, name: 'Совмещение различных систем налогообложения', percent: .25, value: 0},
+        {switch: false, name: 'Ведение раздельного учета при применении разных ставок НДС', percent: .25, value: 0},
+        {switch: false, name: 'Осуществление внешнеэкономической деятельности', percent: .4, value: 0},
+        {switch: false, name: 'Наличие повременной оплаты труда', percent: .1, value: 0},
+        {switch: false, name: 'Наличие курсовой разницы', percent: .1, value: 0},
+        {switch: false, name: 'Наличие недвижимости', percent: .1, value: 0},
+        {switch: false, name: 'Наличие обособленных подразделений', percent: .2, value: 0},
+        {switch: false, name: 'Алкогольная декларация', percent: .25, value: 0},
+        {switch: false, name: 'Наличие контрольно-кассовой техники', percent: .2, value: 0}
       ],
+      coefficient: 1,
       sliders: {
         system: new Slider({
-          0: 'УСН 6%',
-          1: 'УСН 7%',
+          0: 'УСН Доходы',
+          1: 'УСН Доходы - Расходы',
           2: 'ОСН',
           3: 'ЕНВД'
-        }),
-        operations: new Slider({
-          0: '0',
-          1: '15',
-          2: '30',
-          3: '50',
-          4: '75',
-          5: '100',
-          6: '125',
-          7: '150',
-          8: '175',
-          9: '200',
-          10: '225',
-          11: '250',
-          12: '300'
-        }),
+        }, 0),
+        operations: {},
         humans: new Slider({
           0: '0',
           10: '10',
@@ -154,38 +173,121 @@ export default {
           90: '90',
           100: '100'
         }),
-        rates: new Slider ({
-          0: 'Minimum',
-          1: 'Lite',
-          2: 'Optimal',
-          3: 'Maximum'
-        }, 2)
+        rates: {}
+      },
+      reserve: 0,
+      degree: 1,
+      sendMail: {
+        type: 'Калькулятор',
+        organization: '',
+        rate: '',
+        system: '',
+        operations: '',
+        humans: '',
+        switchers: [],
+        cost: 0
       }
     }
   },
+  computed: {
+    result () {
+      let switchResult = this.switches.reduce((a,b) => a+b.value, 0)
+      let res = Math.round(
+        Math.pow((this.server.perc + switchResult), this.degree) * (+this.server.cost) + this.humansCost*this.degree
+      ) + ''
+      return res + ''
+    }
+  },
   methods: {
+    showBackForm() {
+      let switchBox = this.switches.filter(x => x.switch).map(x => x.name)
+      this.sendMail.organization = this.staff ? 'ИП без сотрудников' : 'Организация или ИП с сотрудниками (не точно)'
+      this.sendMail = {
+        type: this.sendMail.type,
+        organization: this.sendMail.organization,
+        rate: this.positions.rate,
+        system: this.sendMail.system,
+        operations : this.server.row.operations,
+        humans: this.positions.humans,
+        switches: switchBox,
+        cost: this.result
+      }
+
+      this.$store.commit('showChange')
+      this.$store.commit('sendings/dataMail', this.sendMail)
+    },
+    sw1(status, i, per) {
+      this.switches[i].value = status ? per : 0
+    },
+    changeStaff() {
+      if (this.staff) {
+        this.reserve= this.humansCost
+        this.humansCost = 0
+      } else {
+        this.humansCost = this.reserve
+      }
+    },
+    findCost() {
+       // 1. define RATE obj
+      this.server.obj = this.calculates.filter(x => x.name === this.positions.rate)[0]
+
+      // 2. find value operations
+      this.server.row = this.server.obj.rows[this.positions.operations]
+
+      // 3. find system and cost system
+      if (!this.positions.operations) {
+        this.server.cost = (this.server.row[this.positions.system]).match(/\d+/)[0]
+      } else {
+        this.server.cost = +this.server.row[this.positions.system]
+      }
+    },
+    showSystem(value) {
+      this.positions.system =
+        value === 'УСН Доходы' || value === 'ЕНВД' ? 'usn_6':
+        value === 'УСН Доходы - Расходы' ? 'usn_7' :
+        value === 'ОСН' ? 'osn' : ''
+
+      this.sendMail.system = value
+    },
+    showOperation(value) {
+      this.positions.operations = value
+    },
+    showHuman(value) {
+      this.positions.humans = value
+    },
+    showRate(order, obj) {
+      this.positions.rate = obj[order].toLowerCase()
+    },
     changeSystemName(val) {
       return this.sliders.system.data[val]
     },
     changeOperationsName(val) {
-      if (val>0)
+      if (val>0) {
+        this.degree = 1
         return 'до ' + this.sliders.operations.data[val]
+      } else {
+        this.degree = 0
+      }
+      
     },
     changeRatesName(val) {
-      switch(val) {
-        case 0: 
-          return `Все входящие и исходящие документы заносятся\n клиентом самостоятельно в программу 1С`
-        case 1:
-          return `Исходящие документы готовятся\n клиентом самостоятельно`
-          break
-        case 2:
-          return `Работа в режиме "online"`
-          break
-        case 3:
-          return `Работа в режиме "online"\n + ведение банк-клиента`
-          break
-        default:
-          return 'Что-то не так'
+      let name = this.sliders.rates.data[val]
+      if (name) {
+        switch(name.toLowerCase()) {
+          case 'minimum': 
+            return `Все входящие и исходящие документы заносятся\n клиентом самостоятельно в программу 1С`
+          case 'lite':
+            return `Исходящие документы готовятся\n клиентом самостоятельно`
+            break
+          case 'optimal':
+            return `Работа в режиме "online"`
+            break
+          case 'maximum':
+            return `Работа в режиме "online"\n + ведение банк-клиента`
+            break
+          default:
+            return 'Что-то не так'
+        }
       }
     },
     changeSlider(e, dom, vueElement) {
@@ -195,6 +297,7 @@ export default {
         if (vueElement[key].style) vueElement[key].style.color = '#429ce3'
       }
       vueElement[e].style.color = '#dcbc96'
+      this.findCost()
     },
     changeHumans(e) {
       this.sliders.humans.memory = document.querySelectorAll('.humans .el-slider__marks-text')
@@ -206,6 +309,8 @@ export default {
       if (this.sliders.humans.memory[e/10]) {
         this.sliders.humans.memory[e/10].style.color = '#dcbc96'
       }
+      
+      this.humansCost = (e > 3) ? 300*(e-3) : 0
     }
   },
   mounted() {
@@ -215,8 +320,33 @@ export default {
       const positionRegulator = this.sliders[slider].def
       saveDom(slider)[positionRegulator].style.color = '#dcbc96'
     }
-
+  },
+  created() {
+    // rates
+    for (let i=0; i<this.calculates.length; i++) {
+      if (this.calculates[i].present) {
+        this.serverDestributor
+          .rates[Object.keys(this.serverDestributor.rates).length] = this.capital(this.calculates[i].name)
+      }
+    }
+    this.sliders.rates = new Slider(this.serverDestributor.rates, 0)
     
+    // operations
+    for (let i=0; i<this.calculates[0].rows.length-1; i++) {
+        if (!i) {
+          this.serverDestributor.operations[i] = '0'
+        } else {
+          this.serverDestributor.operations[i] = (this.calculates[0].rows[i+1].operations).match(/\d+/)[0] - 1 + ''
+
+          if (this.serverDestributor.operations[i] > 250) {
+            this.serverDestributor.operations[i] = +this.serverDestributor.operations[i] + 1 + ''
+          }
+        }
+    }
+
+    this.sliders.operations = new Slider(this.serverDestributor.operations, 0)
+
+    this.findCost()
   }
 }
 </script>
@@ -249,11 +379,16 @@ export default {
       border 1px solid #429CE3
       font-weight bold
       box-shadow 0 0 13px rgba(255,253,236, 1), 0 10px 13px rgba(255,253,236, .5), 15px 5px 31px rgba(255,253,236, 1)
-
-
+      display flex
+      justify-content center
+      text-align center
+      align-items center
+      flex-direction column
 
   .calculator
     padding 0 0 15vh 0
+    transform scale(.95)
+    opacity 0
     @media (max-width 1199px)
       padding-bottom 10px
     .gird-content
@@ -365,6 +500,12 @@ export default {
       .el-slider
         &__bar
           background transparent
+      .el-slider__marks-text
+        &:first-child
+          left 20px!important
+          &:before
+            right 20px
+            position relative
     &__button
       height 30px
       width 15px
@@ -376,6 +517,7 @@ export default {
       transition color 0.3s ease-in
       font 14px h
       top 8px
+      
       .rates &
         top auto
         font-size 20px
@@ -519,6 +661,8 @@ export default {
           margin-left 10px
           // text-shadow 0 0 2px rgba(66,156,227,.5)
           // color #373737
+      .condition
+        font-size 20px
   .wrap-button
     margin-top 30px
     position relative
@@ -565,4 +709,16 @@ export default {
       min-height 0
       max-height 0
       opacity 0
+
+  .right-calc
+    .el-slider__marks-text
+      display flex
+      align-items center
+      justify-content center
+      align-items center
+      &:last-child
+        align-items flex-end
+      &:before
+        transform rotate(0deg)
+        margin-right 4px
 </style>

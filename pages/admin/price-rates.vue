@@ -23,8 +23,7 @@
         align="center"
       )
         template(slot-scope="{row: {activators}}")
-          span.sign(v-if="activators[0]") +
-          span.sign(v-else) -
+          span.sign {{activators[0] | sign}}
 
       el-table-column(
         label="Lite"
@@ -32,24 +31,22 @@
         align="center"
       )
         template(slot-scope="{row: {activators}}")
-          span.sign(v-if="activators[1]") +
-          span.sign(v-else) -
+          span.sign {{activators[1] | sign}}
       el-table-column(
         label="Optimal"
         width="100px"
         align="center"
       )
         template(slot-scope="{row: {activators}}")
-          span.sign(v-if="activators[2]") +
-          span.sign(v-else) -
+          span.sign {{activators[2] | sign}}
       el-table-column(
         label="Maximum"
         width="100px"
         align="center"
       )
         template(slot-scope="{row: {activators}}")
-          span.sign(v-if="activators[3]") +
-          span.sign(v-else) -
+          span.sign {{activators[3] | sign}}
+
       el-table-column(
         prop="price",
         label="Стоимость"
@@ -83,14 +80,12 @@
               circle
               @click="remove(row._id)"
             )
-    el-tooltip(content="Добавить услугу" placement="top")
-      .add-service
-        nuxt-link(to="/admin/price-rate-create")
-          i.el-icon-circle-plus-outline
+    app-add(:urls="'/admin/price-rate-create'" :title="'Добавить услугу'")
 </template>
 
 <script>
 import AppDateChange from '@/components/admin/DateChange'
+import AppAdd from '@/components/admin/Add'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
@@ -98,7 +93,8 @@ export default {
     title: `Цены на тарифы | ${process.env.appName}`
   },
   components: {
-    AppDateChange
+    AppDateChange,
+    AppAdd
   },
   async asyncData({store}) {
     const rates = await store.dispatch('rates/fetchAdmin')
@@ -137,12 +133,4 @@ export default {
     max-width 1200px
   .sign
     font 20px Tahoma
-
-  .add-service
-    cursor pointer
-    i
-      font-size 50px
-      color #777
-      &:hover
-        color #dcbc96
 </style>

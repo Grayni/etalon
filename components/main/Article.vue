@@ -4,10 +4,8 @@
     :body-style="{padding: 0}"
   )
     header.article-header(slot="header")
-      h3.article-title(@click="openArticle") {{article.title}}
-      small
-        i.el-icon-time
-        |  {{ article.date | date('date') }}
+      h3.article-title(@click="openArticle") {{article.title}} на {{ article.date | date('year') }} год
+
     .article-body
       .article-img-wrap
         img.article-img(:src="`/articles${article.imageUrl}`")
@@ -34,8 +32,8 @@ export default {
   },
   methods: {
     openArticle() {
-      const id = this.article._id
-      this.$router.push(`/article/${id}`)
+      const chpu = this.article.chpu
+      this.$router.push(`/article/${chpu}`)
     }
   }
 }
@@ -46,6 +44,7 @@ export default {
   margin-bottom 1.5rem
   background #252525
   color #fffdec
+  border none
   &-header
     display flex
     justify-content space-between
@@ -55,17 +54,24 @@ export default {
     cursor pointer
     &:hover
       color #dcbc96
+  &-body
+    background #fffdec
+    width 100%
   &-img
     width 100%
-    height auto
     &-wrap
       position relative
+      background #fff
+      display flex
+      justify-content center
       img
-        max-height 30vh
+        max-height 400px
+        width auto
+        margin 20px 0
   &-shadow
     width 100%
-    height calc(100% - 3px)
-    box-shadow inset 0 0 10px 10px rgba(0,0,0,.2)
+    height 100%
+    // box-shadow inset 0 0 10px 10px rgba(0,0,0,.2)
     position absolute
     top 0
     left 0
@@ -75,6 +81,7 @@ export default {
     justify-content space-between
     align-items center
     padding 1rem
+    width 100%
 .read
   background transparent
   border-color #fffdec

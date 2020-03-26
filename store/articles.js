@@ -9,7 +9,7 @@ export const actions = {
     }
   },
 
-  async remove({commit}, {id, imageUrl}) {
+  async remove({commit}, {id}) {
     try {
       return await this.$axios.$delete(`/api/articles/admin/${id}`)
     } catch (e) {
@@ -18,20 +18,34 @@ export const actions = {
     }
   },
 
-  async update({commit}, {id, text, title}) {
+  async update({commit}, {title, description, text, image, date, id}) {
     try {
-      return await this.$axios.$put(`/api/articles/admin/${id}`, {text, title})
+      if (Boolean(image)) {
+        const fd = new FormData()
+        fd.append('title', title)
+        fd.append('description', description)
+        fd.append('text', text)
+        fd.append('image', image, image.name)
+        fd.append('date', date)
+
+        return await this.$axios.$put(`/api/articles/admin/image/${id}`, fd)
+      } else {
+        return await this.$axios.$put(`/api/articles/admin/${id}`, {title, description, text, date})
+      }
+
     } catch (e) {
       commit('setError', e, { root: true })
       throw e
     }
   },
 
-  async create({commit}, {title, text, image}) {
+  async create({commit}, {title, chpu, description, text, image }) {
     try {
       const fd = new FormData()
 
       fd.append('title', title)
+      fd.append('chpu', chpu)
+      fd.append('description', description)
       fd.append('text', text)
       fd.append('image', image, image.name)
 
@@ -61,9 +75,9 @@ export const actions = {
     }
   },
 
-  async fetchById({commit}, id) {
+  async fetchByChpu({commit}, chpu) {
     try {
-      return await this.$axios.$get(`/api/articles/${id}`)
+      return await this.$axios.$get(`/api/articles/${chpu}`)
     } catch (e) {
       commit('setError', e, { root: true })
       throw e

@@ -4,10 +4,13 @@
 </template>
 
 <script>
-import AppBenefits from '~/components/main/pages_sections/stocks/Benefits'
+import AppBenefits from '@/components/main/pages_sections/stocks/Benefits'
 export default {
   head: {
-    title: `Акции | ${process.env.appName}`
+    title: `Акции | ${process.env.appName}`,
+    meta: [{
+      hid: 'stocks-description', name: 'description', content: 'Акции на бухгалтерское сопровождение от компании ЦБО Эталон. Месяц бесплатно, ведение кадрового учета до 3-х сотрудников бесплатно и многое другое!'
+    }]
   },
   components: {
     AppBenefits

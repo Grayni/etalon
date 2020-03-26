@@ -5,7 +5,7 @@
         .wrap-title
           h2 Наши предложения
 
-        .container-offers
+        .container-offers(:class="{'first-offers': $ua.isFromPc()}")
           app-card-offer(
             v-for="(offer, id) of offers"
             :key="id+_uid"
@@ -91,15 +91,18 @@ export default {
       @media (max-width 1500px)
         padding-left 0
       @media (max-width 1330px)
-        left 0
         justify-content center
       @media (max-width 900px)
         flex-direction column
         top 0
+      &.first-offers
+        width 30vw
+        left 100vw
+        opacity 0
       .img
         background-image url('/start.jpg')
         background-size cover
-        background-position -200px 0
+        background-position 0 0
         width 600px
         height 600px
         border-radius 4px

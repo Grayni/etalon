@@ -23,7 +23,8 @@
 
       el-form-item(label="Название вопроса", prop="title")
         el-input(
-          v-model="controls.title"
+          v-model="controls.title",
+          @blur="controls.chpu = translit(controls.title)"
         )
 
       el-form-item(label="Текст в формате .md или .html", prop="article")
@@ -53,7 +54,7 @@
 
 <script>
 import AppBreadcrumb from '@/components/admin/Breadcrumb'
-import {validateId, validateForm, questionSections} from '@/plugins/mixins'
+import {validateId, validateForm, showSectionsLabel, transliter} from '@/plugins/mixins'
 export default {
   layout: 'admin',
   middleware: 'admin-auth',
@@ -62,7 +63,7 @@ export default {
       title: `Вопрос | ${this.question.title} | ${process.env.appName}`
     }
   },
-  mixins: [validateId, validateForm, questionSections],
+  mixins: [validateId, validateForm, showSectionsLabel, transliter],
   components: {
     AppBreadcrumb
   },
@@ -77,7 +78,8 @@ export default {
         section: '',
         title: '',
         article: '',
-        date: ''
+        date: '',
+        chpu: ''
       },
       data: {
         path: '/admin/questions-list',
@@ -96,9 +98,11 @@ export default {
 
             const formData = {
               section: this.controls.section,
-              title: this.controls.title,
-              article: this.controls.article,
-              id: this.question._id
+              question: this.controls.title,
+              answer: this.controls.article,
+              id: this.question._id,
+              chpu: this.controls.chpu
+              // id: this.question._id
             }
             
             try {
@@ -112,10 +116,11 @@ export default {
     }
   },
   created() {
-    this.data.title = this.question.title
+    this.data.title = this.question.question
     this.controls.section = this.question.section
-    this.controls.title = this.question.title
-    this.controls.article = this.question.article
+    this.controls.title = this.question.question
+    this.controls.article = this.question.answer
+    this.controls.chpu = this.question.chpu
   }
 }
 </script>

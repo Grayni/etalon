@@ -90,3 +90,6 @@ sw.*
 
 # Keys-mongodb
 server/keys/keys.dev.js
+ecosystem.config.js
+.vscode
+plugins/ga.js

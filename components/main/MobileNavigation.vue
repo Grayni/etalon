@@ -22,7 +22,7 @@
 </template>
 
 <script>
-import AppAddPhone from '~/components/slots/AddPhone'
+import AppAddPhone from '@/components/slots/AddPhone'
 export default {
   components: {
     AppAddPhone
@@ -35,10 +35,10 @@ export default {
         { name: 'Услуги', link: '/services' },
         { name: 'Вопросы', link: '/questions' },
         { name: 'Акции', link: '/stocks' },
-        { name: 'Статьи', link: '/articles' },
+        { name: 'Статьи', link: '/artic' },
         { name: 'Контакты', link: '/contacts' }
       ]
-      
+
     }
   }
 }

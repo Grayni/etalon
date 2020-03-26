@@ -35,8 +35,8 @@
       ) {{item.name}}
 </template>
 <script>
-import AppLogo from '~/components/main/Logo'
-import {scrollPack} from '~/plugins/mixins'
+import AppLogo from '@/components/main/Logo'
+import {scrollPack} from '@/plugins/mixins'
 export default {
   mixins: [scrollPack],
   components: {
@@ -53,11 +53,11 @@ export default {
         ],
         [
           { name: 'Акции', link: 'stocks' },
-          { name: 'Статьи', link: 'articles' },
+          { name: 'Статьи', link: 'artic' },
           { name: 'Контакты', link: 'contacts' }
         ]
       ]
-      
+
     }
   }
 }

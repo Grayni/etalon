@@ -13,6 +13,7 @@
             :label="act"
             border
             name="checkedItems"
+            @change="saveActivity(checkboxWatch.checkedItems)"
           )
 </template>
 
@@ -34,6 +35,18 @@ export default {
           trigger: 'change'
         }
       }
+    }
+  },
+  methods: {
+    saveActivity(value) {
+      if (this.information.title === "Выберите вид Вашей деятельности:") {
+        let obj = { page_1: value }
+        this.$store.commit('sendings/dataQuestionnaire', obj)
+      } else if (this.information.title === "Ваша система налогообложения:"){
+        let obj = { page_3: value }
+        this.$store.commit('sendings/dataQuestionnaire', obj)
+      }
+      
     }
   }
 }

@@ -93,19 +93,24 @@ export default {
   },
   methods: {
     onSubmit(formName) {
+
       this.$refs[formName].validate(async valid => {
         if (valid) {
           this.loading = true
 
           const formData = {
             title: this.controls.title,
-            activators: this.switches,
+            activators: this.controls.switches,
             price: this.controls.price
           }
 
           try {
             await this.$store.dispatch('rates/create', formData)
             this.$message.success('Данная услуга успешно добавлена!')
+
+            this.controls.title = '',
+            this.controls.switches = [false, false, false, false],
+            this.controls.price = ''
           } catch(e) {} finally {
             this.loading = false
           }

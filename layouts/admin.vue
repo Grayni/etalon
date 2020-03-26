@@ -4,7 +4,8 @@
       el-aside(width="260px")
         app-aside
       el-main.main-content
-        nuxt
+        .wrapper-main
+          nuxt
 </template>
 
 <script>
@@ -29,4 +30,6 @@ export default {
     &-main
       background-color #fffdec
       padding 40px
+      .wrapper-main
+        padding-bottom 120px
 </style>

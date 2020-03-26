@@ -9,6 +9,11 @@ const questionSchema = new Schema({
     type: String,
     required: true
   },
+  chpu: {
+    type: String,
+    required: true,
+    unique: true
+  },
   answer: {
     type: String,
     requred: true

@@ -48,9 +48,9 @@
       template(slot="title")
         i.el-icon-suitcase
         span Услуги
-      el-menu-item(index="/admin/price-list")
+      el-menu-item(index="/admin/table-name")
         i.el-icon-date
-        span Прайс-лист
+        span Редактор таблиц
       el-menu-item(index="/admin/price-rates")
         i.el-icon-date
         span Тарифы

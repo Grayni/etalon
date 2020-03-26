@@ -11,16 +11,17 @@
         label="№"
         width="50"
       )
-
+      
       el-table-column(
         prop="section",
         label="Раздел"
         width="200px"
         sortable
       )
-
+        template(slot-scope="{row: {section}}")
+          span {{ showSection(section) }}
       el-table-column(
-        prop="title",
+        prop="question",
         label="Вопрос"
         min-width="300px"
         width="auto"
@@ -76,9 +77,11 @@
 
 <script>
 import AppTimeTable from '@/components/admin/TimeTable'
+import {showSectionsLabel} from '@/plugins/mixins'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
+  mixins: [showSectionsLabel],
   head: {
     title: `Список вопросов | ${process.env.appName}`
   },
@@ -91,9 +94,11 @@ export default {
     return {questions}
   },
   methods: {
+
     open(id) {
       this.$router.push(`/admin/questions/${id}`)
     },
+
     async remove(id) {
       try {
         await this.$confirm('Удаляем?', 'Внимание!', {
@@ -107,6 +112,11 @@ export default {
 
         this.$message.success('Вопрос успешно удален!')
       } catch(e) {}
+    },
+  
+    showSection(section) {
+      const needValue = this.options.filter(x => x.value === section)[0]
+      return needValue.label
     }
   }
 }

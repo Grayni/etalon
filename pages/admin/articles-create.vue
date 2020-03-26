@@ -7,9 +7,12 @@
       ref="create-article",
       @submit.native.prevent="onSubmit('create-article')"
     )
-      el-form-item.name-service(label="Названия статьи" prop="title")
+      el-form-item.name-service(label="Название статьи" prop="title")
         el-input.input-service(v-model="controls.title")
-  
+
+      el-form-item.name-service(label="Краткое описание (для SEO). Желательно с ключевой фразой." prop="description")
+        el-input.input-service(v-model="controls.description")
+
       el-form-item(label="Текст в формате .md или .html", prop="article")
         el-input(
           type="textarea"
@@ -24,7 +27,7 @@
         :visible.sync="previewArticle"
       )
         div(:key="controls.article")
-          vue-markdown
+          vue-markdown.mark-style
             | {{ controls.article }}
 
       el-upload.mb(
@@ -48,72 +51,82 @@
 </template>
 
 <script>
-import {validateForm} from '@/plugins/mixins'
-export default {
-  head: {
-    title: `Создать статью | ${process.env.appName}`
-  },
-  layout: 'admin',
-  middleware: ['admin-auth'],
-  mixins: [validateForm],
-  data() {
-    return {
-      image: null,
-      loading: false,
-      previewArticle: false,
-      controls: {
-        title: '',
-        article: ''
+  import { validateForm, transliter } from "@/plugins/mixins"
+  export default {
+    head: {
+      title: `Создать статью | ${process.env.appName}`
+    },
+    layout: "admin",
+    middleware: ["admin-auth"],
+    mixins: [validateForm, transliter],
+    data() {
+      return {
+        image: null,
+        loading: false,
+        previewArticle: false,
+        controls: {
+          title: "",
+          description: "",
+          article: ""
+        }
+      };
+    },
+    methods: {
+      onSubmit(nameForm) {
+        this.$refs[nameForm].validate(async valid => {
+          if (valid && this.image) {
+            this.loading = true
+
+            const formData = {
+              title: this.controls.title,
+              chpu: this.translit(this.controls.title),
+              description: this.controls.description,
+              text: this.controls.article,
+              image: this.image
+            };
+
+            try {
+              await this.$store.dispatch("articles/create", formData)
+
+              this.controls.title = ""
+              this.controls.description = ""
+              this.controls.article = ""
+              this.image = null
+
+              this.$refs.upload.clearFiles()
+              this.$message.success("Статья успешно создана!")
+            } catch (e) {
+            } finally {
+              this.loading = false
+            }
+          } else {
+            this.$message.error("Загрузите изображение!")
+            return false
+          }
+        })
+      },
+      handleImageChange(file, fileList) {
+        this.image = file.raw
       }
     }
-  },
-  methods: {
-    onSubmit(nameForm) {
-      this.$refs[nameForm].validate(async valid => {
-        if (valid && this.image) {
-          this.loading = true
-
-          const formData = {
-            title: this.controls.title,
-            text: this.controls.article,
-            image: this.image
-          }
-
-          try {
-            await this.$store.dispatch('articles/create', formData)
-
-            this.controls.title = ''
-            this.controls.article = ''
-            this.image = null
-
-            this.$refs.upload.clearFiles()
-            this.$message.success('Статья успешно создана!')
-          } catch(e) {} finally {
-            this.loading = false
-          }
-        } else {
-          this.$message.error('Загрузите изображение!')
-          return false
-        }
-      })
-    },
-    handleImageChange(file, fileList) {
-      this.image = file.raw
-    }
   }
-}
 </script>
 
-<style lang="stylus" scoped>
+<style lang="stylus">
+@import '../../assets/article.styl'
+
 .create-article
-  max-width 1200px
+  max-width: 1200px
   h2
-    font-size 20px
+    font-size: 20px
+
   #d1
-    min-height 1400px
+    min-height: 1400px
+
   .mb
-    padding-bottom 20px
-    margin-top 40px
+    padding-bottom: 20px
+    margin-top: 40px
+
     &05rem
       margin-top 14px
 </style>

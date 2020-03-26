@@ -4,6 +4,8 @@ export default (value, type) => {
     return date.toLocaleDateString()
   } else if (type === 'time') {
     return date.toLocaleTimeString()
+  } else if (type === 'year') {
+    return date.getFullYear()
   }
   return date.toLocaleString()
   

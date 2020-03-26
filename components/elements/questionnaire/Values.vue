@@ -4,9 +4,9 @@
     p(v-if="information.subtitle") {{information.subtitle}}
     el-input-number(
       v-model="num"
-      @change="handleChange"
       :min="0"
       :max="300"
+      @change="saveValue(num)"
     )
 </template>
 
@@ -21,8 +21,17 @@ export default {
     }
   },
   methods: {
-    handleChange(e) {
-      console.log(e)
+    saveValue(val) {
+      if (this.information.title === "Количество операций/месяц:") {
+        let obj = { page_4: val}
+        this.$store.commit('sendings/dataQuestionnaire', obj)
+      } else if (this.information.title === "Количество сотрудников в штате:") {
+        let obj = { page_5: val }
+        this.$store.commit('sendings/dataQuestionnaire', obj)
+      } else if (this.information.title === "Количество кассовых аппаратов:") {
+        let obj = { page_6: val }
+        this.$store.commit('sendings/dataQuestionnaire', obj)
+      }
     }
   }
 }

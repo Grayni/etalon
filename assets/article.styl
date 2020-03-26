@@ -1,0 +1,71 @@
+.mark-style
+  .statiyspisok
+    li
+      margin-bottom 10px
+  .list-default
+    li
+      line-height 40px
+      a
+        color #429ce3
+  .example
+    text-transform uppercase
+    opacity 0
+    &-name
+      cursor pointer
+      user-select none
+      color #429ce3
+      text-decoration underline
+      &:after
+        content '▲'
+        display inline-block
+        justify-content flex-end
+        height 22px
+        width 0
+        transform scaleY(1)
+        transition transform .5s ease
+    &-text
+      margin-top 30px
+      max-height 0
+      transition max-height .5s ease-out
+      overflow hidden
+    &:checked 
+      & ~ .example-name:after
+        transform scaleY(-1)
+        transition transform .5s ease
+        // content: '▼'
+      & ~ .example-text
+        max-height 800px
+        transition max-height .5s ease-in
+  h2
+    font bold 20px h
+    padding 40px 0 20px
+    color #252525
+  p
+    display inline-block
+    margin-bottom 20px
+    font 16px/24px h
+    word-break normal
+    color #373737
+
+  .decimal
+    li
+      list-style-type none
+      line-height 20px
+    a
+      font 200 14px/20px h
+      color #429ce3
+      margin 10px 0
+      display inline-block
+  
+  .cifr
+    color #c88585
+    &.cifr-top
+      font-size 14px
+      display inline-block
+      margin-bottom 20px
+  .green-title
+    color: #6A965E
+  .statiyspisok
+    padding 0
+    li
+      list-style-type decimal

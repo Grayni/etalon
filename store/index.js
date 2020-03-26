@@ -1,5 +1,8 @@
 export const state = () => ({
-  error: null
+  error: null,
+  show: false,
+  animationAfterPreloader: false,
+  mainPage: false
 })
 
 export const mutations = {
@@ -9,6 +12,17 @@ export const mutations = {
 
   clearError(state) {
     state.error = null
+  },
+
+  showChange(state) {
+    state.show = !state.show
+  },
+
+  activeAnimation(state) {
+    state.animationAfterPreloader = !state.animationAfterPreloader
+  },
+  changeMainPage(state, data) {
+    state.mainPage = data
   }
 }
 

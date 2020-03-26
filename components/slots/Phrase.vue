@@ -24,6 +24,7 @@ export default {
     padding 12vh 20vw
     color #b8b8b8
     background #252525
+    position relative
     @media (max-width 1439px)
       padding 12vh 20vw
     @media (max-width 1023px)

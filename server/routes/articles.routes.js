@@ -13,7 +13,6 @@ router.post(
   passport.authenticate('jwt', {session: false}),
   upload.single('image'),
   controller.create
-
 )
 
 router.post(
@@ -40,6 +39,13 @@ router.put(
   controller.update
 )
 
+router.put(
+  '/admin/image/:id',
+  passport.authenticate('jwt', {session: false}),
+  upload.single('image'),
+  controller.updateWidthImage
+)
+
 router.delete(
   '/admin/:id',
   passport.authenticate('jwt', {session: false}),
@@ -53,10 +59,10 @@ router.get(
 )
 
 // Main
-// /api/articles/art
+// /api/articles
 
 router.get('/', controller.getAll)
-router.get('/:id', controller.getById)
+router.get('/:chpu', controller.getByChpu)
 router.put('/add/view/:id', controller.addView)
 
 module.exports = router

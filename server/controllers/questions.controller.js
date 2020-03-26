@@ -4,7 +4,8 @@ module.exports.create = async (req, res) => {
   const question = new Question({
     section: req.body.section,
     question: req.body.question,
-    answer: req.body.answer
+    chpu: req.body.chpu,
+    answer: req.body.answer,
   })
 
   try {
@@ -37,6 +38,16 @@ module.exports.getById = async (req, res) => {
   }
 }
 
+module.exports.getByChpu = async (req, res) => {
+  try {
+    await Question.find({chpu: req.params.chpu}, (error, question) => {
+      res.status(200).json(question[0])
+    })
+  } catch (e) {
+    res.status(500).json(e)
+  }
+}
+
 module.exports.update = async (req, res) => {
   const $set = {
     section: req.body.section,
@@ -63,9 +74,9 @@ module.exports.remove = async (req, res) => {
   }
 }
 
-module.exports.addView = async (req, res) => {
+module.exports.addViewQuestion = async (req, res) => {
   const $set = {
-    views: ++req.body.views
+    views: req.body.views
   }
   try {
     await Question.findOneAndUpdate({

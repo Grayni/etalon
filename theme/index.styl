@@ -18,6 +18,7 @@ body, html, p
   scrollbar-width thin
 
 body
+  background-color #373737
   .questions
     .el-submenu__title
       white-space normal
@@ -28,8 +29,8 @@ body
     &-table
       .cell
         word-break normal
-    &-select-dropdown__wrap
-      overflow auto
+    &-input__inner
+      color #777
     &-upload-dragger
       min-height 200px
 
@@ -44,9 +45,10 @@ h1,h2,h3,h4,h5
   text-align center
 
 h2
-    font 30px 'h'
-    text-transform uppercase
-    text-align center
+  font 30px 'h'
+  text-transform uppercase
+  text-align center
+
 
 ::-webkit-scrollbar
   width 8px
@@ -59,6 +61,7 @@ h2
   background-color #fff
   background #fee5c9
 
+
 .famous-wrap
   min-height calc(100vh - 60px)
   padding-top 170px
@@ -66,12 +69,15 @@ h2
     padding-top 80px
 
 .gray
-  background #373737
   position relative
   z-index 1
   display inline-block
-  padding 10px
-
+  border 1px solid #b8b8b8
+  border-radius 4px
+  margin-right 4vw
+  padding 4px 20px
+  background #252525
+  font-size 28px
 .main-layout
   min-height 100vh
 
@@ -95,3 +101,169 @@ h2
   &-enter,
   &-leave-to
     opacity 0
+
+.fly-box
+  display flex
+  justify-content center
+  align-items center
+  position fixed
+  top 0
+  left 0
+  background-color rgba(0,0,0,.7)
+  min-height 100vh
+  min-width 100vw
+  z-index 3
+  .box-card
+    background-color #373737
+    border none
+    box-shadow 2px 2px 7px rgba(0,0,0,.5)
+    max-width 1024px
+    max-height 700px
+    width 90vw
+    height 90vh
+    min-height 300px
+    min-width 320px
+    display flex
+    flex-direction column
+    color #b8b8b8
+.clearfix
+  &:before,&:after
+    display table
+    content ""
+  &:after
+    clear both
+.el-card__header
+  border none
+
+.cross
+  width 20px
+  height 20px
+  background-color #F56C6C
+  display block
+  cursor pointer
+  border-radius 5px
+  &:before
+    content '✕'
+    font-size 19px
+    display inline-block
+    position relative
+    color #fffdec
+    top -4px
+    right -2px
+  &:hover
+    background #EA6767
+.wrap-header-card
+  display flex
+  justify-content space-between
+  width 100%
+
+.content-block
+  flex 1 0 auto
+  display flex
+  align-items center
+  flex-direction column
+.footer-block
+  width 100%
+  flex 0 0 auto
+  display flex
+  justify-content space-between
+  &.start
+    justify-content flex-end
+
+.line-container
+  width 100%
+  height 4px
+  background-color #aaa
+  margin-bottom 20px
+  .line
+    height 100%
+    background-color #429ce3
+
+.el-form
+  width 100%
+.el-button
+  font 16px h
+  text-transform uppercase
+
+.calc
+  @media (max-width 520px)
+    .el-slider__marks-text
+      font-size 10px!important
+
+::-webkit-input-placeholder
+  color #777
+
+:-ms-input-placeholder
+  color #777
+
+::-moz-placeholder
+  color #777
+  opacity 1
+
+:-moz-placeholder
+  color #777
+  opacity 1
+
+:focus {
+  outline: none;
+}
+
+// hide placeholder
+::-webkit-input-placeholder {
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:focus::-webkit-input-placeholder {
+  opacity: 0;
+  /* color: transparent; */
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+
+::-moz-placeholder {
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+
+:focus::-moz-placeholder {
+  opacity: 0;
+  /* color: transparent; */
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:-ms-input-placeholder {  
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:focus:-ms-input-placeholder {  
+  opacity: 0;
+  /* color: transparent; */
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:-moz-placeholder {
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}
+:focus:-moz-placeholder {
+  opacity: 0;
+  /* color: transparent; */
+  -webkit-transition: opacity 0.35s ease-in-out;
+  -moz-transition: opacity 0.35s ease-in-out;
+  -o-transition: opacity 0.35s ease-in-out;
+  transition: opacity 0.35s ease-in-out;
+}

@@ -2,7 +2,7 @@
   .index
     app-main
     app-company
-    app-calculator
+    app-calculator(:calculates="calculates")
     app-offers
     app-offers2
     app-become
@@ -22,7 +22,10 @@ import AppNeed from '@/components/main/pages_sections/home/HomeNeed'
 import AppContactsFormSend from '@/components/main/pages_sections/contacts/ContactsFormSend'
 export default {
   head: {
-    title: `Центр бухгалтерского обслуживания Эталон`
+    title: `Центр бухгалтерского обслуживания Эталон`,
+    meta: [{
+      hid: 'home-description', name: 'description', content: 'Оказание бухгалтерских услуг в Санкт-Петербург для организаций и ИП. Центр бухгалтерского обслуживания Эталон пердоставляет качественные услуги по приличным ценам. Стоит заглянуть. Месяц бесплатно!'
+    }]
   },
   components: {
     AppMain,
@@ -33,6 +36,21 @@ export default {
     AppBecome,
     AppNeed,
     AppFeedback
+  },
+  async asyncData({store}) {
+    let calculates = await store.dispatch('tables/fetch')
+    return {calculates}
+  },
+  beforeRouteEnter(to, from, next) {
+    next(vm => {
+      if (to.path === '/') {
+        vm.$store.commit('changeMainPage', true)
+      }
+    })
+  },
+  beforeRouteLeave(to, from, next) {
+    this.$store.commit('changeMainPage', false)
+    next()
   }
 }
 </script>

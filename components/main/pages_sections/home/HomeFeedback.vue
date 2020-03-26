@@ -73,13 +73,4 @@ export default {
     display flex
     align-items center
     justify-content flex-end
-    .gray
-      margin-right 4vw
-      padding 0 20px 0 35px
-      background #252525
-      @media (max-width 600px)
-        display inline-block
-        width 100%
-        text-align center
-        background transparent
 </style>

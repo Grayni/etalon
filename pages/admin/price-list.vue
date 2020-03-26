@@ -2,9 +2,29 @@
   .price-list
     h3 Прайс-лист
     app-date-change(:date-last="new Date().toLocaleString()")
-    input.input-cell(ref="input-el" v-model="cellChangeInput" @blur="applyChange" v-show="showInput" @keyup.13="applyChange")
+
+    el-select(
+      v-model="prices.names"
+      placeholder="Выбрать таблицу"
+      :visible-change="changeTable(prices.name)"
+      :remote="true"
+    )
+      el-option(
+        v-for="option in options"
+        :key="option"
+        :label="option"
+        :value="option"
+      )
+
+    input.input-cell(
+      ref="input-el"
+      v-model="cellChangeInput"
+      @blur="applyChange"
+      v-show="showInput"
+      @keyup.13="applyChange"
+    )
     el-table(
-      :data="prices"
+      :data="prices.table"
       @cell-click="addBorder"
       @cell-dblclick="editCell"
     )
@@ -61,15 +81,21 @@ export default {
     AppDateChange
   },
   async asyncData({store}) {
-    const prices = await store.dispatch('prices/fetchAdmin')
+    const prices = await store.dispatch('tables/fetchAdmin')
     return {prices}
   },
   data() {
     return {
       borderData: '',
       showInput: false,
+      borderInfo: {
+        name: '',
+        tabel: ''
+      },
       dataElem: '',
-      cellChangeInput: ''
+      cellChangeInput: '',
+      options: [ 'minimum', 'lite', 'optimal', 'maximum' ],
+      value: ''
     }
   },
   methods: {
@@ -82,9 +108,11 @@ export default {
     },
     editCell(row, column, cell, event) {
       if (event.target.parentNode.classList[0] === 'cell') {
-        this.cellChangeInput = event.toElement.innerText
+        console.log(event)
+        // this.cellChangeInput = event.toElement.innerText
+        this.cellChangeInput = event.originalTarget.innerText
         this.showInput = true
-        this.dataElem = event.toElement
+        this.dataElem = event.originalTarget
         event.target.parentNode.appendChild(this.$refs['input-el'])
         if (this.$refs['input-el'].style.display = 'block') {
           this.$refs['input-el'].focus()
@@ -94,6 +122,9 @@ export default {
     applyChange() {
       this.showInput = false
       this.dataElem.innerHTML = this.cellChangeInput
+    },
+    changeTable(value) {
+      console.log(value)
     }
   }
 }
@@ -151,5 +182,6 @@ export default {
 
   .el-table, .el-table tr, .el-table__body-wrapper
     overflow visible!important
-
+  .el-option
+    padding 20px 0
 </style>
