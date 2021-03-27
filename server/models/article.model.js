@@ -14,6 +14,10 @@ const articleSchema = new Schema({
     type: String,
     required: true
   },
+  keys: {
+    type: Array,
+    required: true
+  },
   text: {
     type: String,
     required: true

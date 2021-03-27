@@ -14,11 +14,39 @@
 <script>
 import {transliter} from '@/plugins/mixins'
 export default {
-  head: {
-    title: `Вопросы | ${process.env.appName}`,
-    meta: [{
-      hid: 'questions-description', name: 'description', content: 'В данном разделе собраны часто задаваемые вопросы. Здесь Вы можете познакомиться с политикой нашей компании и более подробно изучить наш подход к вендению бухгалтерского учета.'
-    }]
+  head() {
+    return {
+      title: this.meta.title,
+      meta: [
+        {
+          hid: `description-${this.$route.name}`,
+          name: 'description',
+          content: this.meta.description
+        },
+        {
+          hid: `og:title-${this.$route.name}`,
+          name: 'og:title',
+          content: this.meta.title
+        },
+        {
+          hid: `og:description-${this.$route.name}`,
+          name: 'og:description',
+          content: this.meta.description
+        },
+        {
+          hid: `og:url-${this.$route.name}`,
+          name: 'og:url',
+          content: process.env.baseUrl + this.$route.path
+        }
+      ],
+      link: [
+        {
+          hid: `canonical-${this.$route.name}`,
+          rel: 'canonical',
+          href: process.env.baseUrl + this.$route.path
+        }
+      ]
+    }
   },
   layout: 'default',
   mixins: [
@@ -32,7 +60,11 @@ export default {
         'Как рассчитывается стоимость обслуживания в центре? От чего зависят цены?',
         'Как часто меняются тарифы? Что если счет окажется выше, чем мы запланировали?',
         'Кто несет ответственность за ошибки в отчетах и несвоевременность сдачи деклараций?'
-      ]
+      ],
+      meta: {
+        title: 'Вопросы по оказанию бухгалтерских услуг',
+        description: 'В данном разделе собраны часто задаваемые вопросы. Здесь Вы можете познакомиться с политикой нашей компании и более подробно изучить наш подход к вендению бухгалтерского учета.'
+      }
     }
   }
 }

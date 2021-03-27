@@ -82,8 +82,17 @@ export default {
   layout: 'admin',
   middleware: ['admin-auth'],
   mixins: [showSectionsLabel],
-  head: {
-    title: `Список вопросов | ${process.env.appName}`
+  head() {
+    return {
+      title: `Список вопросов | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   components: {
     AppTimeTable

@@ -67,7 +67,6 @@ export default {
   background transparent
   border-bottom transparent
   display flex
-  background red
   height 100%
 .item
   font 14px 'h', 'Trebuchet MS'

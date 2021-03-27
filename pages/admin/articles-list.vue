@@ -77,8 +77,17 @@ import AppTimeTable from '@/components/admin/TimeTable'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
-  head: {
-    title: `Список статей | ${process.env.appName}`
+  head() {
+    return {
+      title: `Список статей | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   components: {
     AppTimeTable

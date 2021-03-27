@@ -1,5 +1,5 @@
 <template lang="pug">
-  .need
+  .need(:class="{'mobi-need': !$device.isDesktop}")
     el-row
       el-col(:xs="24" :lg="12")
         h2 На встречу к нам, если:
@@ -105,6 +105,8 @@ export default {
   justify-content center
   align-items center
   opacity 0
+  &.mobi-need
+    opacity 1
   .el-row
     width 100%
     padding 0 10vw

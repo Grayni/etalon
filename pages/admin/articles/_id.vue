@@ -11,8 +11,11 @@
       el-form-item.name-service(label="Изменение названия статьи" prop="title")
         el-input.input-service(v-model="controls.title")
 
-      el-form-item.name-service(label="Измененить описание" prop="description")
+      el-form-item.name-service(label="Изменить описание" prop="description")
         el-input.input-service(v-model="controls.description")
+
+      el-form-item.name-service(label="Изменить ключевые слова" prop="keys")
+        el-input.input-service(v-model="controls.keys")
 
       el-form-item(label="Текст в формате .md или .html", prop="article")
         el-input(
@@ -73,7 +76,14 @@ export default {
   middleware: 'admin-auth',
   head() {
     return {
-      title: `Статья | ${this.article.title} | ${process.env.appName}`
+      title: `Статья | ${this.article.title} | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.article._id}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
     }
   },
   mixins: [validateForm, validateId, transliter],
@@ -98,6 +108,7 @@ export default {
         title: '',
         description: '',
         article: '',
+        keys: ''
       }
     }
   },
@@ -114,6 +125,7 @@ export default {
             formData = {
               title: this.controls.title,
               description: this.controls.description,
+              keys: this.controls.keys.split(', '),
               text: this.controls.article,
               image: this.image,
               id: this.article._id,
@@ -123,6 +135,7 @@ export default {
             formData = {
               title: this.controls.title,
               description: this.controls.description,
+              keys: this.controls.keys.split(', '),
               text: this.controls.article,
               id: this.article._id,
               date
@@ -151,6 +164,12 @@ export default {
     this.controls.title = this.article.title
     this.controls.article = this.article.text
     this.controls.description = this.article.description
+
+    // add field of keys later...
+    if (this.article.keys) {
+      this.controls.keys = this.article.keys.join(', ')
+    }
+
   }
 }
 </script>

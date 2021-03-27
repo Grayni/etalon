@@ -31,11 +31,9 @@ export const actions = {
     dispatch('auth/autoLogin')
   },
 
-  // for mobiles
-  getDeviceType ({commit}) {
-    const deviceType = this.$ua.deviceType()
-    commit('SET_DEVICE_TYPE', deviceType)
-  }
+  // SOCKET_newMessage(ctx, data) {
+  //   console.log('Message received', data)
+  // }
 }
 
 export const getters = {

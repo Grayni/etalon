@@ -8,26 +8,26 @@
         :stretch="true"
       )
 
-        el-tab-pane(
+        el-tab-pane#tab-begin(
           name="begin"
         )
           span(slot="label")
             i.el-icon-tickets.label {{tabs.names[0]}}
           .wrap-tab-content
-            .tab-content
+            .tab-content(:class="{'mobi-tab-content': !$device.isDesktop}")
               .block-items(v-for="(tab, id) in tabs.begin" :key="id+_uid")
                 .item-wrap
                   span.item-circle {{id+1}}
                   span.item-text {{tab}}
-                .item-arrow(v-if="id !==6")
+                .item-arrow(v-if="id !== 6")
                   i.el-icon-right
-        el-tab-pane(
+        el-tab-pane#tab-process(
           name="process"
         )
           span(slot="label")
             i.el-icon-tickets.label {{tabs.names[1]}}
           .wrap-tab-content
-            .tab-content
+            .tab-content(:class="{'mobi-tab-content': !$device.isDesktop}")
               .block-items(v-for="(tab, id) in tabs.process" :key="id+_uid")
                 .item-wrap
                   span.item-circle {{id+1}}
@@ -49,7 +49,7 @@ export default {
         ],
         begin: [
           'Бесплатный подбор наиболее выгодной системы налогообложения',
-          'Помощь в выборе наиболее подходящего тарифа',
+          'Помощь в выборе наиболее подходящего тарифа и предлагаемых услуг',
           'Бесплатная регистрация фирмы при заключении договора на 1 год!',
           'Дарим ключ для сдачи электронной отчетности на 1 год!',
           '1 месяц бухгалтерского обслуживания в подарок!',
@@ -58,7 +58,7 @@ export default {
         ],
         process: [
           'Бесплатный анализ бухгалтерской составляющей в вашей компании',
-          'Проконсультируем и посоветуем по сложившейся ситуации',
+          'Проконсультируем и посоветуем для Вас более выгдные услуги и тариф',
           'Подарим 1 месяц бухгалтерского обслуживания при заключении договора на год',
           'Предоставим ключ для сдачи электронной отчетности на 1 год!',
           'Поможем правильно перенести бухгалтерию от предыдущего бухгалтера',
@@ -138,7 +138,7 @@ export default {
       font-size 12px
     &:before
       padding-right 10px
-      font 17px element-icons
+      font 17px h
       @media (max-width 600px)
         padding-right 5px
         font-size 12px
@@ -160,7 +160,8 @@ export default {
       padding 100px 0 0 0
       max-width 1400px
       opacity 0
-
+      &.mobi-tab-content
+        opacity 1
 
   .block-items
     display flex

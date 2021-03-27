@@ -61,8 +61,17 @@ export default {
   layout: 'admin',
   middleware: ['admin-auth'],
   mixins: [validateForm, showSectionsLabel, transliter],
-  head: {
-    title: `Создать вопрос | ${process.env.appName}`
+  head() {
+    return {
+      title: `Создать вопрос | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   data() {
     return {

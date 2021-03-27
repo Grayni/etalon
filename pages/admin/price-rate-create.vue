@@ -68,8 +68,17 @@ import {validateForm} from '@/plugins/mixins'
 export default {
   layout: 'admin',
   middleware: 'admin-auth',
-  head: {
-      title: 'Создать услугу'
+  head() {
+    return {
+      title: 'Создать услугу',
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   mixins: [validateForm],
   components: {

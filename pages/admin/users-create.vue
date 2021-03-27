@@ -25,8 +25,17 @@ import {validateForm} from '@/plugins/mixins'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
-  head: {
-    title: `Создать пользователя | ${process.env.appName}`
+  head() {
+    return {
+      title: `Создать пользователя | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   mixins: [validateForm],
   data() {

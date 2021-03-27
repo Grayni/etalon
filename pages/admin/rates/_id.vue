@@ -120,7 +120,14 @@ export default {
   middleware: 'admin-auth',
   head() {
     return {
-      title: `Услуга | ${this.service.title} | ${process.env.appName}`
+      title: `Услуга | ${this.service.title} | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.service._id}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
     }
   },
   mixins: [validateForm, validateId],

@@ -2,7 +2,7 @@
   article.question
     header.question-header
       .question-breadcrumb
-        nuxt-link.link-item(to="/questions") Вопросы
+        nuxt-link.link-item(to="/questions") Вопросы 
         span / {{showSectionsLabel(page.section)}} / {{ page.question }}
 
           .question-head {{ page.question }}
@@ -23,10 +23,36 @@ export default {
   mixins: [showSectionsLabel],
   head() {
     return {
-      title: `${this.page.question} | ${process.env.appName}`,
-      meta: [{
-        hid: `questions-${this.page.chpu}-description`, name: 'description', content: `Ответ на вопрос: ${this.page.question}`
-      }]
+      title: this.page.question,
+      meta: [
+        {
+          hid: `description-${this.page._id}`,
+          name: 'description',
+          content: `Ответ на вопрос: ${this.page.question}`
+        },
+        {
+          hid: `og:title-${this.page._id}`,
+          name: 'og:title',
+          content: this.page.question
+        },
+        {
+          hid: `og:description-${this.page._id}`,
+          name: 'og:description',
+          content: `Ответ на вопрос: ${this.page.question}`
+        },
+        {
+          hid: `og:url-${this.page._id}`,
+          name: 'og:url',
+          content: process.env.baseUrl + this.$route.path
+        }
+      ],
+      link: [
+        {
+          hid: `canonical-${this.page._id}`,
+          rel: 'canonical',
+          href: process.env.baseUrl + this.$route.path
+        }
+      ]
     }
   },
   async asyncData({store, params}) {

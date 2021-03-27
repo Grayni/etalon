@@ -52,9 +52,8 @@ export const actions = {
   },
 
   autoLogin({dispatch}) {
-    const cookieStr = process.browser
-      ? document.cookie
-      : this.app.context.req.headers.cookie
+    //console.log(this.app.context.req.headers)
+    const cookieStr = process.browser ? document.cookie : this.app.context.req.headers.cookie
 
     const cookies = Cookie.parse(cookieStr || '') || {}
     const token = cookies['jwt-token']

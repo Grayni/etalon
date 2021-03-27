@@ -89,8 +89,17 @@ import AppAdd from '@/components/admin/Add'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
-  head: {
-    title: `Цены на тарифы | ${process.env.appName}`
+  head() {
+    return {
+      title: `Цены на тарифы | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   components: {
     AppDateChange,

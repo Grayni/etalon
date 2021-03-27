@@ -15,8 +15,17 @@ export default {
   components: {
     AppAnalyticsChart
   },
-  head: {
-    title: `Аналитика | ${process.env.appName}`
+  head() {
+    return {
+      title: `Аналитика | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   async asyncData({store}) {
     const {views, comments} = await store.dispatch('articles/getAnalytics')

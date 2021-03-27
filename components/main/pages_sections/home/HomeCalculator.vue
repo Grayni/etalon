@@ -17,12 +17,13 @@
                     :marks="sliders.system.data"
                     ref="systemBlock"
                     @change="changeSlider($event, 'system', sliders.system.memory)"
-                    :placement="'left'"
                     @input="showSystem(sliders.system.data[$event])"
+                    aria-valuenow="0"
                   )
                 .wrap-sld
                   h3.name-value Количество операций
                   el-slider.operations(
+                    aria-valuenow="0"
                     v-model="sliders.operations.def"
                     input-size="large"
                     :marks="sliders.operations.data"
@@ -33,7 +34,7 @@
                   )
                 .container-humans
                   transition(name="fade-humans")
-                    .wrap-sld-humans(v-if="!staff")
+                    .wrap-sld-humans(v-if="!switches[0].switch")
                       h3.name-value Количество сотрудников
                       .wrap-input-number
                         el-input-number(
@@ -41,20 +42,20 @@
                           @change="changeHumans($event)"
                           @input="showHuman($event)"
                           size="large"
-                          :min="0"
-                          :max="100"
+                          name="humans"
                         )
                       el-slider.humans(
                         v-model="sliders.humans.def"
                         :marks="sliders.humans.data"
                         :max="100"
                         @change="changeHumans($event)"
+                        aria-valuenow="0"
                       )
                 .wrap-sld
                   h3.name-value Дополнительные условия
                   .wrap-conditions
-                    .condition(v-for="(switcher, id) in switches" :key="`${_uid}_${id}`")
-                      el-switch(v-model="switcher.switch" @change="sw1(switcher.switch, id, switcher.percent)")
+                    .condition(v-if="!switcher.special" v-for="(switcher, id) in switches" :key="`${_uid}_${id}`")
+                      el-switch(v-model="switcher.switch" @change="sw1(switcher.switch, id, switcher.percent)" aria-checked="false" name="condition")
                       p {{switcher.name}}
 
       el-col.right-calc(:lg="6" :span="24")
@@ -82,8 +83,10 @@
                       @input="showRate($event, sliders.rates.data)"
                     )
                   .condition.staff
-                    el-switch(v-model="staff" @change="changeStaff")
-                    p Вы = ИП без сотрудников
+                    el-switch(v-model="switches[0].switch" @change="sw1(switches[0].switch, 0, switches[0].percent)" aria-checked="false")
+                    p {{switches[0].name}}
+                    // el-switch(v-model="staff" @change="changeStaff" name="staff")
+                    // p Вы = ИП без сотрудников
                 el-col.rate-col.right(:xs="24" :lg="24" :span="12")
                   .container-cost
                     p Месячное обслуживание
@@ -101,7 +104,7 @@
                       |Обсудить
                       span.asterisk *
                   .wrap-footnote
-                    p Узнать подробнее о цене и альтернативных предложениях. Бесплатный расчет от бухгалтера для выбора более выгодной системы налогообложения.
+                    p Узнать подробнее о цене и альтернативных предложениях, а также о других услугах. Бесплатный расчет от бухгалтера для выбора более выгодной системы налогообложения.
 
 </template>
 <script>
@@ -139,8 +142,8 @@ export default {
         rates: {},
         operations: {}
       },
-      staff: false,
       switches: [
+        {switch: false, name: 'Вы = ИП без сотрудников', percent: -0.2, value: 0, special: 'staff'},
         {switch: false, name: 'Совмещение различных систем налогообложения', percent: .25, value: 0},
         {switch: false, name: 'Ведение раздельного учета при применении разных ставок НДС', percent: .25, value: 0},
         {switch: false, name: 'Осуществление внешнеэкономической деятельности', percent: .4, value: 0},
@@ -175,7 +178,10 @@ export default {
         }),
         rates: {}
       },
-      reserve: 0,
+      reserve: {
+        humans: 0,
+        serverCost: 0
+      },
       degree: 1,
       sendMail: {
         type: 'Калькулятор',
@@ -201,7 +207,7 @@ export default {
   methods: {
     showBackForm() {
       let switchBox = this.switches.filter(x => x.switch).map(x => x.name)
-      this.sendMail.organization = this.staff ? 'ИП без сотрудников' : 'Организация или ИП с сотрудниками (не точно)'
+      this.sendMail.organization = this.switches[0].switch ? 'ИП без сотрудников' : 'Организация или ИП с сотрудниками (не точно)'
       this.sendMail = {
         type: this.sendMail.type,
         organization: this.sendMail.organization,
@@ -217,14 +223,16 @@ export default {
       this.$store.commit('sendings/dataMail', this.sendMail)
     },
     sw1(status, i, per) {
+      this.changeStaff()
+      console.log(status)
       this.switches[i].value = status ? per : 0
     },
     changeStaff() {
-      if (this.staff) {
-        this.reserve= this.humansCost
+      if (this.switches[0].switch) {
+        this.reserve.humans = this.humansCost
         this.humansCost = 0
       } else {
-        this.humansCost = this.reserve
+        this.humansCost = this.reserve.humans
       }
     },
     findCost() {
@@ -296,8 +304,13 @@ export default {
       for (let key in vueElement) {
         if (vueElement[key].style) vueElement[key].style.color = '#429ce3'
       }
+
       vueElement[e].style.color = '#dcbc96'
       this.findCost()
+      
+      if (dom === 'operations') {
+        this.changeStaff()
+      }
     },
     changeHumans(e) {
       this.sliders.humans.memory = document.querySelectorAll('.humans .el-slider__marks-text')
@@ -387,8 +400,6 @@ export default {
 
   .calculator
     padding 0 0 15vh 0
-    transform scale(.95)
-    opacity 0
     @media (max-width 1199px)
       padding-bottom 10px
     .gird-content

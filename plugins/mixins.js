@@ -144,6 +144,11 @@ export const validateForm = {
           {
             required: true, message: 'Раздел должен быть выбран', trigger: 'blur'
           }
+        ],
+        keys: [
+          {
+            required: true, message: 'Перечислите ключевые фразы', trigger: 'blur'
+          }
         ]
       }
     }

@@ -2,7 +2,7 @@
   .proposal-wrap
     el-row.proposal(:gutter="10")
       el-col.title-board(:xs="24" :lg="12")
-        h1 Оказание бухгалтерских услуг
+        h1(title="Стоимость бухгалтреских услуг в Спб и в других регионах России одинакова") Стоимость бухгалтерских услуг
         .container-offers
           app-mini-card(
             v-for="(offer, id) of offers"
@@ -14,7 +14,7 @@
               span.header {{offer.header}}
       el-col.feedback(:xs="24" :lg="12")
         .feedback-card(:class="{'active-card': isCardClick}" @click="isCardClick = true")
-          h2 оставить заявку
+          .imitation-header оставить заявку
           el-form.back(
             ref="send-phone"
             :model="controls"
@@ -45,8 +45,9 @@
                 label="Согласие на обработку персональных данных"
                 name="agree"
               )
-                | Согласие на обработку 
-                a.link(href="/politic.pdf" target="_blank") персональных данных
+                .wrap-agree
+                  span Согласие на обработку 
+                  nuxt-link.link(to="/politic.pdf" target="_blank") персональных данных
 
             el-form-item
               .wrap-button
@@ -159,7 +160,7 @@ export default {
     background-repeat no-repeat
     min-height 100vh
     @media (max-width 1219px)
-      background-size auto
+      background-size auto 100%
     @media(max-width 611px)
       background-size auto 100%
   .header
@@ -200,9 +201,12 @@ export default {
     &.active-card
       opacity 1
       transition opacity .5s ease
-  h2
+  .imitation-header
     margin 0 0 10px 0
     color #fffdec
+    text-transform uppercase
+    font normal 30px h
+    text-align center
   .el
     &-input
       margin-top 10px
@@ -223,4 +227,8 @@ export default {
   color #429ce3
   &:hover
     color #92bfe3
+.wrap-agree
+  display flex
+  flex-wrap wrap
+  white-space pre
 </style>

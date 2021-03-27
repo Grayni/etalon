@@ -1,4 +1,4 @@
-const express = require('express')
+const app = require('express')()
 const bodyParser = require('body-parser')
 const mongoose = require('mongoose')
 const passport = require('passport')
@@ -13,7 +13,22 @@ const tablesRoutes = require('./routes/tables.routes')
 const emailRoutes = require('./routes/email.routes')
 
 const keys = require('./keys')
-const app = express()
+const server = require('http').createServer(app)
+//const io = require('socket.io')(server)
+
+// if (process.env.NODE_ENV !== 'production') {
+//   io.on('connection', socket => {
+//     console.log('IO connected')
+    
+//     socket.on('createMessage',data => {
+//       setTimeout(() => {
+//         socket.emit('newMessage', {
+//           text: data.text + ' SERVER'
+//         })
+//       }, 500)
+//     })
+//   })
+// }
 
 mongoose.set('useCreateIndex', true) //  useUnifiedTopology: true
 mongoose.set('useFindAndModify', false)
@@ -37,4 +52,4 @@ app.use('/api/rates', ratesRoutes)
 app.use('/api/tables', tablesRoutes)
 app.use('/api/email', emailRoutes)
 
-module.exports = app
+module.exports = {app, server}

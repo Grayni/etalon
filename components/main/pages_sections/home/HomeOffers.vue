@@ -5,7 +5,7 @@
         .wrap-title
           h2 Наши предложения
 
-        .container-offers(:class="{'first-offers': $ua.isFromPc()}")
+        .container-offers.first-offers(:class="{'mobi-f-offers': !$device.isDesktop}")
           app-card-offer(
             v-for="(offer, id) of offers"
             :key="id+_uid"
@@ -92,13 +92,16 @@ export default {
         padding-left 0
       @media (max-width 1330px)
         justify-content center
+        left 0!important
       @media (max-width 900px)
         flex-direction column
         top 0
       &.first-offers
         width 30vw
-        left 100vw
         opacity 0
+        &.mobi-f-offers
+          opacity 1
+          width 100vw
       .img
         background-image url('/start.jpg')
         background-size cover

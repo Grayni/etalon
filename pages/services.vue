@@ -21,11 +21,44 @@ import AppServicesPhysics from '~/components/main/pages_sections/services/Servic
 import {widthWatch} from '~/plugins/mixins'
 
 export default {
-  head: {
-    title: `Услуги | ${process.env.appName}`,
-    meta: [{
-      hid: 'service-description', name: 'description', content: 'Такие цены на бухгалтерское сопровождение в Спб есть только у нас! Все как на ладони! ЦБО Эталон рекомендует.'
-    }]
+  head() {
+    return {
+      title: this.meta.title,
+      meta: [
+        {
+          hid: `description-${this.$route.name}`,
+          name: 'description',
+          content: this.meta.description
+        },
+        {
+          hid: `keywords-${this.$route.name}`,
+          name: 'keywords',
+          content: 'стоимость бухгалтерских услуг, бухгалтерские услуги стоимость, стоимость бухгалтерских услуг по Спб'
+        },
+        {
+          hid: `og:title-${this.$route.name}`,
+          name: 'og:title',
+          content: this.meta.title
+        },
+        {
+          hid: `og:description-${this.$route.name}`,
+          name: 'og:description',
+          content: this.meta.description
+        },
+        {
+          hid: `og:url-${this.$route.name}`,
+          name: 'og:url',
+          content: process.env.baseUrl + this.$route.path
+        }
+      ],
+      link: [
+        {
+          hid: `canonical-${this.$route.name}`,
+          rel: 'canonical',
+          href: process.env.baseUrl + this.$route.path
+        }
+      ]
+    }
   },
   mixins: [widthWatch],
   components: {
@@ -41,7 +74,15 @@ export default {
     let tables = await store.dispatch('tables/fetch')
     tables = tables.filter(x => x.present === true)
     return {rates, tables}
-  }
+  },
+  data() {
+    return {
+      meta: {
+        title: 'Стоимость бухгалтерских услуг',
+        description: 'Стоимость бухгалтерских услуг - это один из самых волнующих вопросов наших клиентов. И мы приятно удивляем нашей прозрачной политикой в недорогом ценообразовании.'
+      }
+    }
+  },
 }
 </script>
 

@@ -1,6 +1,6 @@
 <template lang="pug">
   el-container.questions
-    el-aside.questions-aside(width="400px")
+    el-aside.questions-aside
       .questions-container-menu
         h3 Вопросы
         .fog-box.top

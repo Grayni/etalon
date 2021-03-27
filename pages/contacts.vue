@@ -16,17 +16,58 @@ import AppYaMap from '~/components/main/pages_sections/contacts/maps'
 import AppContactsData from '~/components/main/pages_sections/contacts/ContactsData'
 import AppFeedback from '@/components/main/pages_sections/home/HomeFeedBack'
 export default {
-  head: {
-    title: `Контакты | ${process.env.appName}`,
-    meta: [{
-      hid: 'contacts-description', name: 'description', content: 'Информация о компании ЦБО «Эталон» - адреса, время работы и удаленность офиса от метро'
-    }]
+  head() {
+    return {
+      title: this.meta.title,
+      meta: [
+        {
+          hid: `description-${this.$route.name}`,
+          name: 'description',
+          content: this.meta.description
+        },
+        {
+          hid: `keywords-${this.$route.name}`,
+          name: 'keywords',
+          content: 'контакты ЦБО Эталон, расположение офиса, номер телефона ЦБО Эталон, ЦБО Эталон на карте'
+        },
+        {
+          hid: `og:title-${this.$route.name}`,
+          name: 'og:title',
+          content: this.meta.title
+        },
+        {
+          hid: `og:description-${this.$route.name}`,
+          name: 'og:description',
+          content: this.meta.description
+        },
+        {
+          hid: `og:url-${this.$route.name}`,
+          name: 'og:url',
+          content: process.env.baseUrl + this.$route.path
+        }
+      ],
+      link: [
+        {
+          hid: `canonical-${this.$route.name}`,
+          rel: 'canonical',
+          href: process.env.baseUrl + this.$route.path
+        }
+      ]
+    }
   },
   components: {
     AppYaMap,
     AppContactsData,
     AppFeedback
   },
+  data() {
+    return {
+      meta: {
+        title: 'Контакты и расположение офиса',
+        description: 'Информация о компании ЦБО «Эталон» - адреса, время работы и удаленность офиса от метро'
+      }
+    }
+  }
 }
 </script>
 

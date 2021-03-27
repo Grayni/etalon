@@ -31,7 +31,6 @@
     max-height 300px
     min-width 320px
     max-width 600px
-    background red
     border-radius 4px
   .cross
     height 20px

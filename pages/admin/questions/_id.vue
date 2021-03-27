@@ -60,7 +60,14 @@ export default {
   middleware: 'admin-auth',
   head() {
     return {
-      title: `Вопрос | ${this.question.title} | ${process.env.appName}`
+      title: `Вопрос | ${this.question.title} | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.question._id}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
     }
   },
   mixins: [validateId, validateForm, showSectionsLabel, transliter],

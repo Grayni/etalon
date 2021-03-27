@@ -6,6 +6,7 @@ module.exports.create = async (req, res) => {
     title: req.body.title,
     chpu: req.body.chpu,
     description: req.body.description,
+    keys: req.body.keys,
     text: req.body.text,
     imageUrl: `/${req.file.filename}`
   })
@@ -52,6 +53,7 @@ module.exports.update = async (req, res) => {
   const $set = {
     title: req.body.title,
     description: req.body.description,
+    keys: req.body.keys,
     text: req.body.text,
     date: req.body.date
   }
@@ -71,6 +73,7 @@ module.exports.updateWidthImage = async (req, res) => {
   const $set = {
     title: req.body.title,
     description: req.body.description,
+    keys: req.body.keys,
     text: req.body.text,
     date: req.body.date,
     imageUrl: `/${req.file.filename}`

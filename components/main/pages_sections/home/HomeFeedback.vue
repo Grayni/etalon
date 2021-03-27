@@ -1,6 +1,6 @@
 <template lang="pug">
   .requis-wrap
-    app-logo-background
+    app-logo-background(v-if="$device.isDesktop")
     el-row.requis
       el-col.requisites-wrap(:xs="24" :span="12")
         .send-wrap

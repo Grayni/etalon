@@ -15,6 +15,8 @@
   display inline-block
   @media (max-width 1199px)
     margin 35px 0
+  @media (max-width 470px)
+    transform rotate(0)
   &-text
     margin 0
     color #429CE3

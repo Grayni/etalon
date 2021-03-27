@@ -6,15 +6,56 @@
 <script>
 import AppBenefits from '@/components/main/pages_sections/stocks/Benefits'
 export default {
-  head: {
-    title: `Акции | ${process.env.appName}`,
-    meta: [{
-      hid: 'stocks-description', name: 'description', content: 'Акции на бухгалтерское сопровождение от компании ЦБО Эталон. Месяц бесплатно, ведение кадрового учета до 3-х сотрудников бесплатно и многое другое!'
-    }]
+  head() {
+    return {
+      title: this.meta.title,
+      meta: [
+        {
+          hid: `description-${this.$route.name}`,
+          name: 'description',
+          content: this.meta.description
+        },
+        {
+          hid: `keywords-${this.$route.name}`,
+          name: 'keywords',
+          content: 'Акции на бухгалтреское сопровождение, месяц бухгалтерского ослуживания бесплатно, бесплатные консультации, подписание соглашения с ПФР бесплатно'
+        },
+        {
+          hid: `og:title-${this.$route.name}`,
+          name: 'og:title',
+          content: this.meta.title
+        },
+        {
+          hid: `og:description-${this.$route.name}`,
+          name: 'og:description',
+          content: this.meta.description
+        },
+        {
+          hid: `og:url-${this.$route.name}`,
+          name: 'og:url',
+          content: process.env.baseUrl + this.$route.path
+        }
+      ],
+      link: [
+        {
+          hid: `canonical-${this.$route.name}`,
+          rel: 'canonical',
+          href: process.env.baseUrl + this.$route.path
+        }
+      ]
+    }
   },
   components: {
     AppBenefits
-  }
+  },
+  data() {
+    return {
+      meta: {
+        title: 'Акции на бухгалтерское обслуживание',
+        description: 'Акции на бухгалтерское сопровождение от компании ЦБО Эталон. Месяц бесплатно, ведение кадрового учета до 3-х сотрудников бесплатно и многое другое!'
+      }
+    }
+  },
 }
 </script>
 

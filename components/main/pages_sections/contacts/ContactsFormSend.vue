@@ -27,16 +27,17 @@
         )
 
       el-form-item(prop="agree")
-        el-checkbox(
+        el-checkbox.agree(
           v-model="controls.agree"
           label="Согласие на обработку персональных данных"
           name="agree"
-        )
-          | Согласие на обработку 
-          a.link(href="/politic.pdf" target="_blank") персональных данных
+        ) 
+          .wrap-agree
+            span Согласие на обработку 
+            nuxt-link.link(to="/politic.pdf" target="_blank") персональных данных
 
       el-form-item.button-wrap
-        el-button(
+        el-button.send-question(
           type="info"
           native-type="submit"
           :loading="loading"
@@ -111,7 +112,24 @@ export default {
       border-color rgb(184,184,184)
       font 18px h
 
+  .send-question
+    margin-top 20px
+
   .el-icon-message
     &:before
       margin-right 5px
+  .wrap-agree
+    display flex
+    flex-wrap wrap
+    span
+      white-space pre
+  .agree + .el-form-item__error
+    padding 0
+  @media (max-width 570px)
+    .agree + .el-form-item__error
+      top 40px
+  @media (max-width 370px)
+    .agree + .el-form-item__error
+      top 54px
+
 </style>

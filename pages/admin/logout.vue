@@ -9,6 +9,18 @@ export default {
   beforeCreate() {
     this.$store.dispatch('auth/logout')
     this.$router.push('/admin/login?message=logout')
+  },
+  head() {
+    return {
+      title: 'Выход',
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   }
 }
 </script>

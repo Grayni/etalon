@@ -42,11 +42,47 @@ import AppComment from '@/components/main/Comment'
 import AppLogoBackground from '@/components/main/LogoBackground'
 import AppCreateComment from '@/components/main/CreateComment'
 export default {
-  head () {
+  head() {
     return {
-      title: `${this.article.title} | ${process.env.appName}`,
+      title: this.article.title,
       meta: [
-        {hid: `article-${this.article._id}`, name: 'description', content: this.article.description}
+        {
+          hid: `description-${this.article._id}`,
+          name: 'description',
+          content: this.article.description
+        },
+        {
+          hid: `keywords-${this.article._id}`,
+          name: 'keywords',
+          content: this.article.keys.join(', ')
+        },
+        {
+          hid: `og:title-${this.article._id}`,
+          name: 'og:title',
+          content: this.article.title
+        },
+        {
+          hid: `og:description-${this.article._id}`,
+          name: 'og:description',
+          content: this.article.description
+        },
+        {
+          hid: `og:image-${this.article._id}`,
+          name: 'og:image',
+          content: `${process.env.baseUrl}/articles${this.article.imageUrl}`
+        },
+        {
+          hid: `og:url-${this.article._id}`,
+          name: 'og:url',
+          content: process.env.baseUrl + this.$route.path
+        }
+      ],
+      link: [
+        {
+          hid: `canonical-${this.article._id}`,
+          rel: 'canonical',
+          href: process.env.baseUrl + this.$route.path
+        }
       ]
     }
   },

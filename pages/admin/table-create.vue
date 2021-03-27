@@ -70,8 +70,17 @@ export default {
   layout: 'admin',
   middleware: ['admin-auth'],
   mixins: [validateForm],
-  head: {
-    title: `Создание нового тарифа | ${process.env.appName}`
+  head() {
+    return {
+      title: `Создание нового тарифа | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   components: {
     AppDateChange,
@@ -146,25 +155,6 @@ export default {
             inp.focus()
         }, 0)
       }
-
-
-      // if (this.borderData) {
-      //   this.borderData.classList.remove('border-show')
-      // }
-      // this.borderData = cell
-      // this.borderData.classList.add('border-show')
-
-      // if (event.target.parentNode.classList[0] === 'cell') {
-      //   this.cellChangeInput = event.originalTarget.innerHtml
-      //   this.showInput = true
-      //   this.dataElem = event.originalTarget
-      //   event.target.parentNode.appendChild(this.$refs['input-el'])
-      //   if (this.$refs['input-el'].style.display = 'block') {
-      //     this.$refs['input-el'].focus()
-      //   }
-      // } else {
-      //   console.log('test')
-      // }
     },
 
     applyChange() {

@@ -13,6 +13,9 @@
       el-form-item.name-service(label="Краткое описание (для SEO). Желательно с ключевой фразой." prop="description")
         el-input.input-service(v-model="controls.description")
 
+      el-form-item.name-service(label="Ключевые фразы (для SEO)." prop="keys")
+        el-input.input-service(v-model="controls.keys")
+
       el-form-item(label="Текст в формате .md или .html", prop="article")
         el-input(
           type="textarea"
@@ -53,8 +56,17 @@
 <script>
   import { validateForm, transliter } from "@/plugins/mixins"
   export default {
-    head: {
-      title: `Создать статью | ${process.env.appName}`
+    head() {
+      return {
+        title: `Создать статью | ${process.env.appName}`,
+        meta: [
+          {
+            hid: `noindex-${this.$route.name}`,
+            name: 'robots',
+            content: 'noindex'
+          }
+        ]
+      }
     },
     layout: "admin",
     middleware: ["admin-auth"],
@@ -65,9 +77,10 @@
         loading: false,
         previewArticle: false,
         controls: {
-          title: "",
-          description: "",
-          article: ""
+          title: '',
+          description: '',
+          keys: '',
+          article: ''
         }
       };
     },
@@ -81,6 +94,7 @@
               title: this.controls.title,
               chpu: this.translit(this.controls.title),
               description: this.controls.description,
+              keys: this.controls.keys.split(', '),
               text: this.controls.article,
               image: this.image
             };
@@ -89,7 +103,8 @@
               await this.$store.dispatch("articles/create", formData)
 
               this.controls.title = ""
-              this.controls.description = ""
+              this.controls.description = "",
+              this.controls.keys = "",
               this.controls.article = ""
               this.image = null
 

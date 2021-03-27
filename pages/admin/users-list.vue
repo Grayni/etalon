@@ -6,8 +6,17 @@
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
-  head: {
-    title: `Список пользователей | ${process.env.appName}`
+  head() {
+    return {
+      title: `Список пользователей | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
 }
 </script>

@@ -11,29 +11,13 @@
                 .line
             .wrap-content
               app-back-send
-    transition(name="preloader" @after-leave="reactBehavior")
-      .preloader(v-if="!this.ifLoaded")
-        .preloader-in
-          .ball.one
-            .inner
-          .ball.two
-            .inner
-          .ball.three
-            .inner
-          .ball.four
-            .inner
-          .ball.five
-            .inner
-          .ball.six
-            .inner
-          .ball.center
-            .inner
+    app-preloader(v-if="$device.isDesktop")
 
     el-container.main-layout(:class="{'show-body': ifLoaded}")
       el-header.header-menu
         transition(name='gradually')
           app-head-info.info(v-if="this.$route.path === '/'")
-        .width-wrap-menu(v-if="$ua.isFromPc() && width>790" v-scroll="handleScroll" :class="{'scroll-run': isActive}")
+        .width-wrap-menu(v-if="$device.isDesktop && width>790" v-scroll="handleScroll" :class="{'scroll-run': isActive}")
           .wrap-menu(:class="{'scroll-hide': isActive}")
             app-navigation
         .mobile-menu-wrap(v-else)
@@ -47,38 +31,69 @@
                 app-mobile-navigation
       el-main
         transition(name='gradually')
-          app-wrapper-question(v-if="reg.test(this.$route.path)")
+          app-wrapper-question(v-if="regs.questions.test(this.$route.path)")
+            nuxt
+          app-wrapper-chart(v-else-if="regs.chart.test(this.$route.path)")
             nuxt
           div(v-else)
             nuxt
       el-footer
+        span#top100_widget(style="margin-right: 10px;opacity: .5")
         p
-          span OOO
+          span OOO 
           span(v-if="width>550") "Центр бухгалтерского обслуживания "Эталон" |
-          span(v-else) "ЦБО Эталон" |
-          span 2014 - {{new Date().getFullYear()}} | © Grayni
+          span(v-else) "ЦБО Эталон" | 
+          span.date-footer 2014 - {{new Date().getFullYear()}} | © Grayni
+        
 </template>
 <script>
 import AppBackSend from '@/components/elements/questionnaire/SendForm'
+import AppPreloader from '@/components/elements/preloader'
 import AppNavigation from '@/components/main/Navigation'
 import AppMobileNavigation from '@/components/main/MobileNavigation'
 import AppLogo from '@/components/main/Logo'
 import AppHeadInfo from '@/components/main/HeadInfo'
 import AppWrapperQuestion from '@/components/elements/wrapperQuestion'
+import AppWrapperChart from '@/components/elements/wrapperChart'
 import {scrollPack, widthWatch} from '@/plugins/mixins'
 
 export default {
+  head() {
+    return {
+      script: [
+        {
+          src: 'https://cbo-etalon.ru/metrics.js',
+          async: true,
+          defer: true
+        }
+      ],
+      noscript: [
+        {
+          innerHTML: '<div><img src="https://mc.yandex.ru/watch/29051230/1" width="1" height="1" style="position:absolute; left:-9999px; width: 1px; height: 1px" alt="" /></div>',
+          body: true,
+          bodyAppend: true
+        },
+        {
+          innerHTML: '<img src="//counter.rambler.ru/top100.cnt?pid=3116385" alt="Топ-100" />',
+          body: true,
+          bodyAppend: true
+        }
+      ]
+    }
+  },
   mixins: [
     scrollPack,
     widthWatch
   ],
   components: {
+    AppPreloader,
     AppBackSend,
     AppNavigation,
     AppMobileNavigation,
     AppLogo,
     AppHeadInfo,
-    AppWrapperQuestion
+    AppWrapperQuestion,
+    AppWrapperChart
   },
   data() {
     return {
@@ -86,7 +101,10 @@ export default {
       loaded: false,
       hamburgState: false,
       isActive: false,
-      reg: new RegExp('^(\/questions)'),
+      regs: {
+        questions: new RegExp('^(\/questions)'),
+        chart: new RegExp('^(\/chart)')
+      },
       activeCard: false,
       offAnimation: false,
       scene1: null,
@@ -118,67 +136,67 @@ export default {
     }
   },
   methods: {
-    reactBehavior() {
-      this.$store.commit('activeAnimation')
-    },
+    // reactBehavior() {
+    //   this.$store.commit('activeAnimation')
+    // },
     scrollMainPage () {
-      this.tween1 = this.$gsap.TweenMax.fromTo('.calculator', 1.2, {opacity: 0}, { opacity: 1, overwrite: false})
+      if (this.$device.isDesktop) {
+        this.tween1 = this.$gsap.TweenMax.fromTo('.calculator', 1.2, {opacity: 0}, { opacity: 1, overwrite: false})
 
-      this.scene1 = new this.$scrollmagic.Scene({
-        triggerElement: '.computer',
-        triggerHook: 0.5,
-        offset: 200
-      }).setTween(this.tween1)
-      this.$ksvuescr.$emit('addScene', 'computer', this.scene1)
-
-
-      this.tween2 = this.$gsap.TweenMax.fromTo('.first-offers', .8,{left: '10vw', opacity: 0, width: '94vw'}, { left: '4vw', opacity: 1, width: '100vw', overwrite: false, immediateRender: false})
-
-      this.scene2 = new this.$scrollmagic.Scene({
-        triggerElement: '.offers',
-        triggerHook: 'onLeave',
-        offset: -200
-      }).setTween(this.tween2)
-      this.$ksvuescr.$emit('addScene', 'offers', this.scene2)
+        this.scene1 = new this.$scrollmagic.Scene({
+          triggerElement: '.computer',
+          triggerHook: 0.5,
+          offset: 200
+        }).setTween(this.tween1)
+        this.$ksvuescr.$emit('addScene', 'computer', this.scene1)
 
 
-      this.tween3 = this.$gsap.TweenMax.fromTo('.second-offers', .8,{right: '10vw', opacity: 0, width: '94vw'}, { right: '4vw', opacity: 1, width: '100vw', overwrite: false, immediateRender: false})
+        this.tween2 = this.$gsap.TweenMax.fromTo('.first-offers', .8,{left: '10vw', opacity: 0, width: '94vw'}, { left: '4vw', opacity: 1, width: '100vw', overwrite: false, immediateRender: false})
 
-      this.scene3 = new this.$scrollmagic.Scene({
-        triggerElement: '.second-offers',
-        triggerHook: 'onLeave',
-        offset: -200
-      }).setTween(this.tween3)
-      this.$ksvuescr.$emit('addScene', 'offers2', this.scene3)
-
-
-      this.tween4 = this.$gsap.TweenMax.fromTo('.tab-content', .8,{opacity: 0}, {opacity: 1, overwrite: false, immediateRender: false})
-
-      this.scene4 = new this.$scrollmagic.Scene({
-        triggerElement: '.wrap-tab-content',
-        triggerHook: 0.5,
-        offset: 200
-      }).setTween(this.tween4)
-      this.$ksvuescr.$emit('addScene', 'tab', this.scene4)
+        this.scene2 = new this.$scrollmagic.Scene({
+          triggerElement: '.offers',
+          triggerHook: 'onLeave',
+          offset: -200
+        }).setTween(this.tween2)
+        this.$ksvuescr.$emit('addScene', 'offers', this.scene2)
 
 
-      this.tween5 = this.$gsap.TweenMax.fromTo('.need', .8,{opacity: 0}, {opacity: 1, overwrite: false, immediateRender: false})
+        this.tween3 = this.$gsap.TweenMax.fromTo('.second-offers', .8,{right: '10vw', opacity: 0, width: '94vw'}, { right: '4vw', opacity: 1, width: '100vw', overwrite: false, immediateRender: false})
 
-      this.scene5 = new this.$scrollmagic.Scene({
-        triggerElement: '.need',
-        triggerHook: 0.5
-      }).setTween(this.tween5)
-      this.$ksvuescr.$emit('addScene', 'need', this.scene5)
+        this.scene3 = new this.$scrollmagic.Scene({
+          triggerElement: '.sec',
+          triggerHook: 'onLeave',
+          offset: -200
+        }).setTween(this.tween3)
+        this.$ksvuescr.$emit('addScene', 'offers2', this.scene3)
 
 
-      this.tween6 = this.$gsap.TweenMax.fromTo('#logo-name', .8,{opacity: 1, scale: 1, top: '0'}, {opacity: 0, scale: .8, top: '60vh'})
+        this.tween4 = this.$gsap.TweenMax.fromTo('.tab-content', .8,{opacity: 0}, {opacity: 1, overwrite: false, immediateRender: false})
 
-      this.scene6 = new this.$scrollmagic.Scene({
-        triggerElement: '.phrase',
-        triggerHook: 1,
-        duration: '200%'
-      }).setTween(this.tween6)
-      this.$ksvuescr.$emit('addScene', 'logo', this.scene6)
+        this.scene4 = new this.$scrollmagic.Scene({
+          triggerElement: '.wrap-tab-content',
+          triggerHook: 0.5,
+          offset: 200
+        }).setTween(this.tween4)
+        this.$ksvuescr.$emit('addScene', 'tab', this.scene4)
+
+
+        this.tween5 = this.$gsap.TweenMax.fromTo('.need', .8,{opacity: 0}, {opacity: 1, overwrite: false, immediateRender: false})
+
+        this.scene5 = new this.$scrollmagic.Scene({
+          triggerElement: '.need',
+          triggerHook: 0.5
+        }).setTween(this.tween5)
+        this.$ksvuescr.$emit('addScene', 'need', this.scene5)
+
+        this.tween6 = this.$gsap.TweenMax.fromTo('#logo-name', .8,{opacity: 1, scale: 1, top: '0'}, {opacity: 0, scale: .8, top: '60vh'})
+        this.scene6 = new this.$scrollmagic.Scene({
+          triggerElement: '.phrase',
+          triggerHook: 1,
+          duration: '200%'
+        }).setTween(this.tween6)
+        this.$ksvuescr.$emit('addScene', 'logo', this.scene6)
+      }
     },
     hideBackForm() {
       this.$store.commit('showChange')
@@ -186,10 +204,6 @@ export default {
     },
     toogleHamburger() {
       this.hamburgState = !this.hamburgState
-    },
-    something() {
-      const deviceType = this.$ua.deviceType()
-      this.deviceType = deviceType
     }
   },
   mounted() {
@@ -202,6 +216,7 @@ export default {
         this.toogleHamburger()
       }
     })
+
     this.ifLoaded = true
   }
 }
@@ -223,7 +238,6 @@ export default {
     flex-direction column
   .wrap-send-form
     position fixed
-    background red
     width 100vw
     height 100vh
     display flex
@@ -252,135 +266,39 @@ export default {
     align-items center
     flex-direction column
     flex 1 1 auto
-.preloader
-  width 100%
-  height 100vh
-  position fixed
-  display flex
-  justify-content center
-  align-items center
-  z-index 100
-  top 0
-  left 0
-  right 0
-  bottom 0
-  &-enter-active,
-  &-leave-active
-    transition opacity .5s ease 1s
-
-  &-enter,
-  &-leave-to
-    opacity 0
-
-  &-in
-    position absolute
-    width 300px
-    height 100px
-    left 50%
-    top 50%
-    margin-left -150px
-    margin-top -50px
-    border-radius 20px
-    .ball
-      position absolute
-      width 0
-      height 100%
-      left -15px
-      bottom 0
-      background #4a9
-      opacity 0
-      animation:moveBall 2.8s infinite linear
-      &.one
-        animation-delay 0s
-      &.two
-        animation-delay 0.2s
-      &.three
-        animation-delay 0.4s
-      &.four
-        animation-delay 0.6s
-      &.five
-        animation-delay 0.8s
-      &.six
-        animation-delay 1s
-
-      .inner
-        height 30px
-        width 30px
-        position absolute
-        background #999
-        bottom 0
-        left 0
-        margin-left -15px
-        border-radius 100%
-
-      &.center
-        left 50%
-        top 50%
-        background none
-        animation centerBall 2.8s infinite cubic-bezier(0.55, 0.055, 0.675, 0.19)
-        .inner
-          top -15px
-
-        @keyframes centerBall
-          25%, 75%, 100%
-            opacity 0
-            animation-timing-function cubic-bezier(0.515, 0.61, 0.355, .45)
-          0%
-            opacity .1
-
-      @keyframes moveBall
-        0%
-          left -10%
-          opacity 0
-          -webkit-animation-timing-function cubic-bezier(0.55, 0.085, 0.68, 0.53)
-          animation-timing-function cubic-bezier(0.55, 0.085, 0.68, 0.53)
-        10%
-          opacity 0
-        28.7%
-          transform rotate(-180deg)
-          left 50%
-          opacity 1
-          animation-timing-function linear
-        71.3%
-          transform rotate(180deg)
-          left 50%
-          opacity 1
-          animation-timing-function cubic-bezier(0.25, 0.46, 0.45, 0.94)
-        90%
-          opacity 0
-        100%
-          left 110%
-          transform rotate(deg)
-          opacity 0
-
 .main-layout
   background #fffdec
   opacity 0
-  transition opacity .5s ease
+  transition opacity .3s ease
   position relative
   z-index 2
 
   &.show-body
     opacity 1
-    transition opacity .5s ease
-.el-
-  &header.header-menu
-    padding 0
-    position absolute
-    width 100%
-    z-index 1002
-    @media (max-width 767px)
-      padding-top 40px
-  &main, &footer
-    padding 0
-  &footer
-    display flex
-    justify-content center
-    align-items center
-    background #373737
-    color #b8b8b8
-    font 14px h
-
+    transition opacity .3s ease
+.main-layout
+  .el-
+    &header.header-menu
+      padding 0
+      position absolute
+      width 100%
+      z-index 1002
+      @media (max-width 767px)
+        padding-top 40px
+    &main, &footer
+      padding 0
+    &footer
+      display flex
+      justify-content center
+      align-items center
+      background-color #333
+      color #b8b8b8
+      font 14px h
+      .date-footer
+        margin-left 3px
+      @media (max-width 410px)
+        flex-direction column
+        min-height 80px
 .width-wrap-menu
   display flex
   align-items center

@@ -6,13 +6,14 @@ const nodemailer = require('nodemailer')
 let transporter = nodemailer.createTransport({
   host: 'cbo-etalon.ru',
   port: 587,
-  secure: false,
   auth: {
     user: process.env.USER,
     pass: process.env.PASS
   },
   tls: {
-    rejectUnauthorized: true
+    secure: false,
+    ignoreTLS: true,
+    rejectUnauthorized: false
   }
 })
 
@@ -53,7 +54,6 @@ module.exports.sendEmail = async (req, res) => {
   } else {
     transporter.sendMail(HelperOptions, (err, info) => {
       if (err) console.log(err)
-      else console.log('good')
     })
     res.end(JSON.stringify(1))
   }
@@ -83,7 +83,6 @@ module.exports.sendUser = (req, res) => {
   } else {
     transporter.sendMail(HelperOptions, (err, info) => {
       if (err) console.log(err)
-      else console.log('good')
     })
     res.status(200).json()
   }
@@ -125,7 +124,6 @@ module.exports.sendQuestionnaire = (req, res) => {
   } else {
     transporter.sendMail(HelperOptions, (err, info) => {
       if (err) console.log(err)
-      else console.log('good')
     })
     res.end(JSON.stringify(1))
   }

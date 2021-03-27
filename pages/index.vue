@@ -21,11 +21,54 @@ import AppFeedback from '@/components/main/pages_sections/home/HomeFeedBack'
 import AppNeed from '@/components/main/pages_sections/home/HomeNeed'
 import AppContactsFormSend from '@/components/main/pages_sections/contacts/ContactsFormSend'
 export default {
-  head: {
-    title: `Центр бухгалтерского обслуживания Эталон`,
-    meta: [{
-      hid: 'home-description', name: 'description', content: 'Оказание бухгалтерских услуг в Санкт-Петербург для организаций и ИП. Центр бухгалтерского обслуживания Эталон пердоставляет качественные услуги по приличным ценам. Стоит заглянуть. Месяц бесплатно!'
-    }]
+  layout: (ctx) => ctx.isMobile ? 'mobile' : 'default',
+  head() {
+    return {
+      title: this.meta.title,
+      meta: [
+        {
+          hid: `description-${this.$route.name}`,
+          name: 'description',
+          content: this.meta.description
+        },
+        {
+          hid: `keywords-${this.$route.name}`,
+          name: 'keywords',
+          content: 'оказание бухгалтерских услуг, предоставление бухгалтерских услуг, предоставление бухгалтерских услуг в Санкт-Петербурге'
+        },
+        {
+          name: 'google-site-verification',
+          content: '3cukbRhW5LSn_9F1KGkerx19QaUjZEMYHSytC2w2Gcw'
+        },
+        {
+          hid: `og:title-${this.$route.name}`,
+          name: 'og:title',
+          content: this.meta.title
+        },
+        {
+          hid: `og:description-${this.$route.name}`,
+          name: 'og:description',
+          content: this.meta.description
+        },
+        {
+          hid: `og:image-${this.$route.name}`,
+          name: 'og:image',
+          content: `${process.env.baseUrl}/first.jpg`
+        },
+        {
+          hid: `og:url-${this.$route.name}`,
+          name: 'og:url',
+          content: process.env.baseUrl
+        }
+      ],
+      link: [
+        {
+          hid: `${this.$route.name}-canonical`,
+          rel: 'canonical',
+          href: process.env.baseUrl
+        }
+      ]
+    }
   },
   components: {
     AppMain,
@@ -36,6 +79,14 @@ export default {
     AppBecome,
     AppNeed,
     AppFeedback
+  },
+  data() {
+    return {
+      meta: {
+        title: 'Предоставление бухгалтерских услуг',
+        description: 'Предоставление бухгалтерских услуг по Санкт-Петербургу и России. Индвидуальный подход к каждому клиенту! Скидки и акции. ЦБО Эталон рекомендует.'
+      }
+    }
   },
   async asyncData({store}) {
     let calculates = await store.dispatch('tables/fetch')

@@ -74,8 +74,17 @@ import AppDateChange from '@/components/admin/DateChange'
 export default {
   layout: 'admin',
   middleware: ['admin-auth'],
-  head: {
-    title: `Цены | ${process.env.appName}`
+  head() {
+    return {
+      title: `Цены | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   components: {
     AppDateChange

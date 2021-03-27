@@ -18,19 +18,20 @@ export const actions = {
     }
   },
 
-  async update({commit}, {title, description, text, image, date, id}) {
+  async update({commit}, {title, description, keys, text, image, date, id}) {
     try {
       if (Boolean(image)) {
         const fd = new FormData()
         fd.append('title', title)
         fd.append('description', description)
+        fd.append('keys', keys)
         fd.append('text', text)
         fd.append('image', image, image.name)
         fd.append('date', date)
 
         return await this.$axios.$put(`/api/articles/admin/image/${id}`, fd)
       } else {
-        return await this.$axios.$put(`/api/articles/admin/${id}`, {title, description, text, date})
+        return await this.$axios.$put(`/api/articles/admin/${id}`, {title, description, keys, text, date})
       }
 
     } catch (e) {
@@ -39,13 +40,14 @@ export const actions = {
     }
   },
 
-  async create({commit}, {title, chpu, description, text, image }) {
+  async create({commit}, {title, chpu, description, keys, text, image }) {
     try {
       const fd = new FormData()
 
       fd.append('title', title)
       fd.append('chpu', chpu)
       fd.append('description', description)
+      fd.append('keys', keys)
       fd.append('text', text)
       fd.append('image', image, image.name)
 

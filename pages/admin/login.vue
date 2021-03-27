@@ -31,8 +31,17 @@ export default {
     AppLogoBackground
   },
   layout: 'empty',
-  head: {
-    title: 'Портал в запределье'
+  head() {
+    return {
+      title: 'Портал в запределье',
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
+    }
   },
   data() {
     return {

@@ -71,9 +71,16 @@ export default {
   layout: 'admin',
   middleware: ['admin-auth'],
   mixins: [capital, validateForm],
-  head () {
+  head() {
     return {
-      title: `Редактировать таблицу ${this.capital(this.table.name)} | ${process.env.appName}`
+      title: `Редактировать таблицу ${this.capital(this.table.name)} | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `robots-${this.table._id}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
     }
   },
   components: {

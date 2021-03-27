@@ -2,12 +2,12 @@
   el-row.home-section
     el-col.year(:span="0" :lg="6")
       p {{new Date().getFullYear()}}
-    el-col.name#logo-name(:xs="24" :lg="12")
-      .logo-mobile-wrap(v-if="width<791 || (!$ua.isFromPc() && width>790)")
+    el-col.name#logo-name(:xs="24" :lg="12" :class="{'logo-static': !$device.isDesktop}")
+      .logo-mobile-wrap(v-if="width<791 || (!$device.isDesktop && width>790)")
         app-logo(:size="box")
-      h1 Etalon
+      h2 Etalon
       .wrap-sub
-        h3 Центр бухгалтерского обслуживания
+        h1 Оказание бухгалтерских услуг
 </template>
 <script>
 let kute, kuteCSS
@@ -41,7 +41,9 @@ export default {
     }
   },
   mounted() {
-    this.animationInfo()
+    if (this.$device.isDesktop) {
+      this.animationInfo()
+    }
   }
 }
 </script>
@@ -49,7 +51,7 @@ export default {
 .home-section
 .el-row
   background-color #464646
-  background-image url('/first.png')
+  background-image url('/first.jpg')
   background-size cover
   padding-top 170px
   min-height 100vh
@@ -81,13 +83,17 @@ export default {
       opacity 0
       position relative
       top 0
+      &.logo-static
+        opacity 1
+        top 0
+        transform scale(1)
       @media (max-width 900px)
         padding 0
-      h3, h1
+      h3, h2, h1
         margin 0
         padding 0
         text-align center
-      h1
+      h2
         color #dcbc96
         font 8rem 'h'
         letter-spacing 8px
@@ -99,7 +105,7 @@ export default {
         display flex
         justify-content center
         margin-top 10px
-      h3
+      h1
         font bold 1rem h
         color #b8b8b8
         letter-spacing 3px
@@ -108,9 +114,9 @@ export default {
         border-left 0px solid transparent
         border-right 0px solid transparent
         border-bottom 1px solid #429CE3
-        padding 5px 50px
+        padding 5px 30px
         display block
-        word-spacing 20px
+        word-spacing 6px
         @media (max-width 1090px)
           font-size 0.7rem
         @media (max-width 850px)

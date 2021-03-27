@@ -1,5 +1,5 @@
 <template lang="pug">
-  .address-wrap(:class="{'left-shift': !$ua.isFromPc() && width>790}")
+  .address-wrap(:class="{'left-shift': !$device.isDesktop && width>790}")
     .office
       i.mr05rem.el-icon-office-building
       | Спб, ул. Коли Томчака 28А, БЦ "Гепард"

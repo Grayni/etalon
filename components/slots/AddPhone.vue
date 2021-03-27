@@ -1,6 +1,11 @@
 <template lang="pug">
   .wrap
-    el-image.icons(v-if="hide !== 'hide'" v-for="(icon, id) in icons" :src="`/${icon.name}.png`" :alt="icon.name" :key="id + _uid")
+    .icons(
+      v-if="hide !== 'hide' && $device.isDesktop" v-for="(icon, id) in icons"
+      :alt="icon.name"
+      :key="id + _uid"
+      :style="`width: 24px; height: 24px; background: url('social.png') ${icon.position};`"
+    )
     a.number-phone(:href="`tel:+7${phone}9547013`")
       |8 (
       slot
@@ -14,13 +19,16 @@ export default {
     return {
       icons: [
         {
-          name: 'viber'
+          name: 'viber',
+          position: '-0 -0'
         },
         {
-          name: 'whatsapp'
+          name: 'whatsapp',
+          position: '-24px -0'
         },
         {
-          name: 'telephone'
+          name: 'telephone',
+          position: '-48px -0'
         },
       ]
     }

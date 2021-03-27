@@ -2,7 +2,7 @@
   el-row.offers2
     .bg-offer
     el-col.gird-content(:span="24")
-      .container-offers(:class="{'second-offers': $ua.isFromPc()}")
+      .container-offers.sec(:class="{'second-offers': $device.isDesktop}")
         .img(v-if="width>1330")
         app-card-offer(
           v-for="(offer, id) of offers"
@@ -92,7 +92,7 @@ export default {
     @media (max-width 1330px)
       justify-content center
       top 0
-      right 0
+      right 0!important
       padding 20px 0 40px
     @media (max-width 900px)
       flex-direction column

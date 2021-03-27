@@ -100,7 +100,14 @@ export default {
   components: {AppTimeTable},
   head() {
     return {
-       title: `Создать или удалить таблицу | ${process.env.appName}`
+      title: `Создать или удалить таблицу | ${process.env.appName}`,
+      meta: [
+        {
+          hid: `noindex-${this.$route.name}`,
+          name: 'robots',
+          content: 'noindex'
+        }
+      ]
     }
   },
   async asyncData({store}) {

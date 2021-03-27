@@ -17,7 +17,7 @@
       )
         span Читать
         i.el-icon-arrow-right
-      span
+      span.views-article
         i.el-icon-view
         |  {{article.views}}
 </template>
@@ -52,6 +52,9 @@ export default {
   &-title
     margin 0
     cursor pointer
+    font normal 16px h
+    letter-spacing 2px
+    color rgba(255, 253, 236, .7)
     &:hover
       color #dcbc96
   &-body
@@ -82,13 +85,21 @@ export default {
     align-items center
     padding 1rem
     width 100%
+  .el-icon-arrow-right
+    margin 0 7px
+    &:before
+      display inline-block
+      width 0
+  .views-article
+    color rgba(255, 253, 236, .7)
 .read
   background transparent
-  border-color #fffdec
-  color #fffdec
+  box-shadow 0 0 2px rgba(255, 253, 236, .7)
+  border none
+  color rgba(255, 253, 236, .7)
   font-size 14px
   letter-spacing 2px
   &:hover
-    border-color #dcbc96
+    box-shadow 0 0 4px #dcbc96
     color #dcbc96
 </style>

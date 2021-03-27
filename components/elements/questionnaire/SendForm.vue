@@ -32,7 +32,7 @@
           name="agree"
         )
           | Согласие на обработку 
-          a.link(href="/politic.pdf" target="_blank") персональных данных
+          nuxt-link.link(to="/politic.pdf" target="_blank") персональных данных
 
       el-form-item.sendler
         el-button(
@@ -70,7 +70,7 @@ export default {
           try {
             if (formData.companyInfo.page_1) {
               await this.$store.dispatch('sendings/sendQuestionnaire', formData)
-
+              console.log('test')
               let obj = {
                 type: 'Анкета',
                 page_1: [],
